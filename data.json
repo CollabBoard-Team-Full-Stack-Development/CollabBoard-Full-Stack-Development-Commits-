@@ -1,0 +1,559 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Hello User",
+      "email": "admin@collabboard.com",
+      "password": "password123",
+      "role": "admin",
+      "status": "online"
+    },
+    {
+      "id": "2",
+      "name": "John Doe",
+      "email": "john@collabboard.com",
+      "password": "password123",
+      "role": "employee",
+      "status": "offline"
+    },
+    {
+      "id": "u_f35f94",
+      "name": "New User",
+      "passwordHash": "$2a$10$XexampleHashForTestingManager1234567890",
+      "role": "employee",
+      "jobTitle": "Team Member",
+      "department": "General",
+      "status": "Active",
+      "bio": "New CollabBoard participant.",
+      "tasksCompleted": 0,
+      "activeTasks": 0,
+      "isActive": true
+    },
+    {
+      "id": "u_680426",
+      "name": "Jane Test",
+      "email": "jane@collabboard.com",
+      "passwordHash": "$2a$10$LKha4rZrx27reFs0Edp7UuZ/kX5B2ZXEYhlFRj6yG1mxdxxeZB7V.",
+      "role": "employee",
+      "jobTitle": "Team Member",
+      "department": "General",
+      "status": "Active",
+      "bio": "New CollabBoard participant.",
+      "tasksCompleted": 0,
+      "activeTasks": 0,
+      "isActive": true
+    }
+  ],
+  "projects": [
+    {
+      "id": "p1",
+      "name": "Alpha Redesign XXXX",
+      "description": "Q1 UI/UX Overhaul",
+      "color": "#8B5CF6",
+      "category": "",
+      "status": "In Progress",
+      "dueDate": "",
+      "teamMembers": [
+        "2",
+        "u_f35f94",
+        "u_680426"
+      ]
+    },
+    {
+      "id": "p2",
+      "name": "Mobile App Launch",
+      "description": "iOS and Android release",
+      "color": "#22C55E",
+      "category": "",
+      "status": "In Progress",
+      "dueDate": "",
+      "teamMembers": []
+    }
+  ],
+  "tasks": [
+    {
+      "id": "t1",
+      "projectId": "p1",
+      "title": "Design landing page wireframes",
+      "description": "Create Figma mockups",
+      "status": "Done",
+      "tag": "Design",
+      "priority": "high",
+      "assigneeId": "1",
+      "dueDate": "2026-09-02"
+    },
+    {
+      "id": "t2",
+      "projectId": "p1",
+      "title": "Setup design system tokens",
+      "description": "Configure colors, typography, and spacing variables",
+      "status": "Done",
+      "tag": "Engineering",
+      "priority": "medium",
+      "assigneeId": "2",
+      "dueDate": "2026-08-30"
+    },
+    {
+      "id": "t3",
+      "projectId": "p1",
+      "title": "User persona research & interviews",
+      "description": "Conduct 5 interviews with target Q1 demographics",
+      "status": "Doing",
+      "tag": "Research",
+      "priority": "high",
+      "assigneeId": "u_680426",
+      "dueDate": "2026-09-05"
+    },
+    {
+      "id": "t7",
+      "projectId": "p1",
+      "title": "Implement authentication routing",
+      "description": "Build login and signup flows with protected route wrappers",
+      "status": "Doing",
+      "tag": "Backend",
+      "priority": "high",
+      "assigneeId": "1",
+      "dueDate": "2026-09-04"
+    },
+    {
+      "id": "t8",
+      "projectId": "p1",
+      "title": "Write unit tests for dashboard widgets",
+      "description": "Ensure component testing coverage exceeds 80%",
+      "status": "Done",
+      "tag": "QA",
+      "priority": "medium",
+      "assigneeId": "2",
+      "dueDate": "2026-09-08"
+    },
+    {
+      "id": "t4",
+      "projectId": "p2",
+      "title": "Configure push notifications",
+      "description": "Set up Firebase Cloud Messaging for Android & APNs for iOS",
+      "status": "Doing",
+      "tag": "Mobile",
+      "priority": "high",
+      "assigneeId": "u_f35f94",
+      "dueDate": "2026-09-10"
+    },
+    {
+      "id": "t5",
+      "projectId": "p2",
+      "title": "App Store listing assets",
+      "description": "Export screenshots, banners, and promotional text copy",
+      "status": "Done",
+      "tag": "Marketing",
+      "priority": "low",
+      "assigneeId": "1",
+      "dueDate": "2026-08-25"
+    },
+    {
+      "id": "t6",
+      "projectId": "p2",
+      "title": "Perform beta testing build release",
+      "description": "Deploy TestFlight and Google Play Internal testing tracks",
+      "status": "Doing",
+      "tag": "QA",
+      "priority": "high",
+      "assigneeId": "2",
+      "dueDate": "2026-09-12"
+    },
+    {
+      "id": "t9",
+      "projectId": "p2",
+      "title": "Optimize offline database caching",
+      "description": "Implement local SQLite caching layer for smoother offline usage",
+      "status": "Doing",
+      "tag": "Engineering",
+      "priority": "high",
+      "assigneeId": "u_680426",
+      "dueDate": "2026-09-14"
+    },
+    {
+      "id": "t10",
+      "projectId": "p2",
+      "title": "Draft privacy policy agreement",
+      "description": "Review legal guidelines for data collection in mobile application stores",
+      "status": "To Do",
+      "tag": "Legal",
+      "priority": "low",
+      "assigneeId": "u_f35f94",
+      "dueDate": "2026-09-18"
+    }
+  ],
+  "calendarEvents": [
+    {
+      "id": "ev_1",
+      "userId": "1",
+      "title": "Project Deadline",
+      "date": "2026-09-15",
+      "type": "reminder",
+      "color": "#8B5CF6"
+    },
+    {
+      "id": "ev_1",
+      "userId": "1",
+      "title": "Project Deadline",
+      "date": "2026-09-15",
+      "type": "reminder",
+      "color": "#8B5CF6"
+    },
+    {
+      "id": "ev_101",
+      "userId": "1",
+      "title": "Quarterly Budget Review",
+      "date": "2026-09-02",
+      "type": "reminder",
+      "color": "#3B82F6"
+    },
+    {
+      "id": "ev_102",
+      "userId": "2",
+      "title": "Frontend Code Refactoring",
+      "date": "2026-09-05",
+      "type": "mark",
+      "color": "#22C55E"
+    },
+    {
+      "id": "ev_103",
+      "userId": "u_680426",
+      "title": "Client Presentation Prep",
+      "date": "2026-09-10",
+      "type": "reminder",
+      "color": "#F59E0B"
+    },
+    {
+      "id": "ev_104",
+      "userId": "u_680426",
+      "title": "Design System Audit",
+      "date": "2026-09-12",
+      "type": "mark",
+      "color": "#EC4899"
+    },
+    {
+      "id": "ev_f29277",
+      "userId": "1",
+      "title": "sdfsdfafasdf",
+      "date": "2026-09-01",
+      "type": "reminder",
+      "color": "#8B5CF6"
+    }
+  ],
+  "activities": [
+    {
+      "id": "act_56b84c",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-29T18:26:02.849Z"
+    },
+    {
+      "id": "act_c4265b",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-29T18:02:32.210Z"
+    },
+    {
+      "id": "act_3ba802",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-29T18:01:07.348Z"
+    },
+    {
+      "id": "act_f218ec",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "moved task",
+      "target": "Write unit tests for dashboard widgets to Done",
+      "timestamp": "2026-08-29T05:43:22.101Z"
+    },
+    {
+      "id": "act_650893",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-29T05:41:28.534Z"
+    },
+    {
+      "id": "act_562f7b",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "moved task",
+      "target": "Write unit tests for dashboard widgets to To Do",
+      "timestamp": "2026-08-28T18:08:43.107Z"
+    },
+    {
+      "id": "act_68d27b",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "moved task",
+      "target": "Write unit tests for dashboard widgets to Doing",
+      "timestamp": "2026-08-28T18:08:39.865Z"
+    },
+    {
+      "id": "act_85ab00",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "moved task",
+      "target": "Design landing page wireframes to Done",
+      "timestamp": "2026-08-28T18:08:33.642Z"
+    },
+    {
+      "id": "act_92ab46",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T17:58:51.666Z"
+    },
+    {
+      "id": "act_989820",
+      "user": {
+        "name": "John Doe",
+        "avatar": ""
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T14:33:12.432Z"
+    },
+    {
+      "id": "act_e1d658",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T14:32:39.867Z"
+    },
+    {
+      "id": "act_a0ba73",
+      "user": {
+        "name": "John Doe",
+        "avatar": ""
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T14:03:25.031Z"
+    },
+    {
+      "id": "act_a0524f",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "moved task",
+      "target": "Configure push notifications to Doing",
+      "timestamp": "2026-08-28T13:49:54.740Z"
+    },
+    {
+      "id": "act_0f0b6b",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "moved task",
+      "target": "Setup design system tokens to Done",
+      "timestamp": "2026-08-28T13:43:24.772Z"
+    },
+    {
+      "id": "act_f41597",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "moved task",
+      "target": "Setup design system tokens to Doing",
+      "timestamp": "2026-08-28T13:43:12.297Z"
+    },
+    {
+      "id": "act_da4e66",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "updated project",
+      "target": "Mobile App Launch",
+      "timestamp": "2026-08-28T13:21:03.144Z"
+    },
+    {
+      "id": "act_faa091",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "updated project",
+      "target": "Alpha Redesign XXXX",
+      "timestamp": "2026-08-28T13:20:58.937Z"
+    },
+    {
+      "id": "act_98a20f",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T13:19:59.990Z"
+    },
+    {
+      "id": "act_32de42",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "updated project",
+      "target": "Alpha Redesign XXXX",
+      "timestamp": "2026-08-28T13:18:14.435Z"
+    },
+    {
+      "id": "act_4a8e79",
+      "user": {
+        "name": "Jane Test",
+        "avatar": ""
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T13:16:04.610Z"
+    },
+    {
+      "id": "act_3d7732",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T13:15:32.930Z"
+    },
+    {
+      "id": "act_84e049",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "updated project",
+      "target": "Alpha Redesign XXXX",
+      "timestamp": "2026-08-28T13:11:40.760Z"
+    },
+    {
+      "id": "act_b933a2",
+      "user": {
+        "name": "Hello User",
+        "avatar": ""
+      },
+      "action": "updated project",
+      "target": "Alpha Redesign",
+      "timestamp": "2026-08-28T13:11:12.695Z"
+    },
+    {
+      "id": "act_ebb00c",
+      "user": {
+        "name": "Jane Test"
+      },
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T12:13:26.070Z"
+    },
+    {
+      "id": "act_268214",
+      "user": "John Doe",
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T11:59:53.611Z"
+    },
+    {
+      "id": "act_7c429c",
+      "user": "Hello User",
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T11:50:55.807Z"
+    },
+    {
+      "id": "act_a2dba7",
+      "user": "Hello User",
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T11:43:07.142Z"
+    },
+    {
+      "id": "act_a2f19a",
+      "user": "Hello User",
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T11:36:37.947Z"
+    },
+    {
+      "id": "act_d61bda",
+      "user": "Hello User",
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T11:26:51.198Z"
+    },
+    {
+      "id": "act_19cdc2",
+      "user": "Jane Test",
+      "action": "registered",
+      "target": "CollabBoard platform",
+      "timestamp": "2026-08-28T11:26:10.791Z"
+    },
+    {
+      "id": "act_2cb560",
+      "user": "Hello User",
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T11:23:19.420Z"
+    },
+    {
+      "id": "act_b99262",
+      "user": "Hello User",
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T11:21:31.459Z"
+    },
+    {
+      "id": "act_e4ea51",
+      "user": "Hello User",
+      "action": "logged in",
+      "target": "CollabBoard",
+      "timestamp": "2026-08-28T11:10:42.131Z"
+    },
+    {
+      "id": "act_94eee2",
+      "user": "New User",
+      "action": "registered",
+      "target": "CollabBoard platform",
+      "timestamp": "2026-08-27T19:42:56.772Z"
+    },
+    {
+      "id": "a1",
+      "text": "System initialized successfully",
+      "timestamp": "2026-08-27T08:39:42.011Z"
+    }
+  ]
+}
