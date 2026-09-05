@@ -1,24 +1,35 @@
-const {
-    activities,
-    addActivity
-} = require('../data/store');
+const mongoose = require('mongoose');
 
-const Activity = {
-    findAll: () => {
-        return activities;
+const activitySchema = new mongoose.Schema(
+    {
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        action: {
+            type: String,
+            required: true
+        },
+        target: {
+            type: String,
+            required: true
+        },
+        from: {
+            type: String,
+            default: ''
+        },
+        to: {
+            type: String,
+            default: ''
+        }
     },
-
-    create: (
-        user,
-        action,
-        target
-    ) => {
-        return addActivity(
-            user,
-            action,
-            target
-        );
+    {
+        timestamps: true
     }
-};
+);
+
+activitySchema.index({ createdAt: -1 });
+
+const Activity = mongoose.model('Activity', activitySchema);
 
 module.exports = Activity;
