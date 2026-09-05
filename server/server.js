@@ -4,10 +4,14 @@ const http = require('http');
 const { Server } = require('socket.io');
 
 const app = require('./src/app');
+const connectDB = require('./src/config/db');
 
 const PORT = process.env.PORT || 5000;
 
 const server = http.createServer(app);
+
+// Increase header size limit to prevent 431 errors from large user payloads/tokens
+server.maxHeaderSize = 65536; // 64KB
 
 const io = new Server(server, {
     cors: {
@@ -45,6 +49,22 @@ io.on('connection', (socket) => {
     });
 });
 
+const startServer = async () => {
+    try {
+        await connectDB();
+
+        server.listen(PORT, () => {
+            console.log(`CollabBoard API running at http://localhost:${PORT}`);
+            console.log('MongoDB connected');
+            console.log('Socket.IO enabled');
+        });
+    } catch (error) {
+        console.error('Server startup aborted because MongoDB could not connect.');
+        process.exit(1);
+    }
+};
+
+startServer();
 server.listen(PORT, () => {
     console.log(`CollabBoard API running at http://localhost:${PORT}`);
     console.log('Socket.IO enabled');

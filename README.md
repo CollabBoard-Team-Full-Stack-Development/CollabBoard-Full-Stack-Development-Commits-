@@ -1,36 +1,48 @@
 # CollabBoard — Collaborative Kanban Platform
 
-## Week 1 — Static Front-End
+## Week 2 — Working REST APIs with Mock Data Integrated with Frontend
 
 CollabBoard is a collaborative Kanban-style task management application developed as part of the Full Stack Application project.
 
-This repository contains the **Week 1 implementation**, focusing on the static React frontend, reusable UI components, Kanban board interface, mock data, application layout, and initial project architecture.
+This repository contains the **Week 2 implementation**, extending the Week 1 static React frontend with a working **Node.js + Express REST API** using temporary/mock server-side data.
+
+The Week 2 milestone focuses on connecting the frontend application with the backend API, implementing authentication, protected API routes, project and task operations, user management, activity data, calendar operations, and frontend-backend integration.
 
 ---
 
-## Week 1 Objectives
+# Week 2 Objectives
 
-The main objectives completed during Week 1 are:
+The main objectives completed during Week 2 are:
 
-Set up the React application
-Create the main application structure
-Build reusable React components
-Design the CollabBoard dashboard
-Create the Kanban board interface
-Create To Do, Doing, and Done columns
-Create reusable task cards
-Add mock project/task/user data
-Create the login interface
-Create the initial responsive dark-themed UI
-Prepare the project repository and Git workflow
-Create the component tree
-Create the initial wireframes
+* Extend the Week 1 React frontend
+* Create a Node.js backend
+* Create an Express REST API
+* Implement authentication endpoints
+* Implement JWT-based authentication
+* Implement authentication middleware
+* Create protected API routes
+* Create project REST API endpoints
+* Create task REST API endpoints
+* Create user REST API endpoints
+* Create activity REST API endpoints
+* Create calendar REST API endpoints
+* Integrate frontend API services with the backend
+* Connect the React application to the REST API
+* Replace frontend-only operations with API requests where implemented
+* Handle API authentication using JWT bearer tokens
+* Implement manager/admin authorization for project management operations
+* Use temporary/mock server-side data for Assignment 02
+* Test REST APIs using Postman
+* Test frontend-backend integration
+* Maintain the GitHub branch and commit workflow
 
-These tasks correspond to the **M1 — Static Front-End Skeleton** milestone in the project brief.
+The Week 2 implementation corresponds to the **Assignment 02 — Working REST APIs (with mock data) Integrated with Frontend** milestone.
 
 ---
 
-#  Technical Stack
+# Technical Stack
+
+## Frontend
 
 **React 18** — Frontend framework
 **Vite** — Development and build tool
@@ -39,285 +51,586 @@ These tasks correspond to the **M1 — Static Front-End Skeleton** milestone in 
 **Lucide React** — Icons
 **Framer Motion** — Animations
 **React Context API** — Application state
-**localStorage** — Client-side persistence
+**Axios** — Frontend HTTP/API communication
+**localStorage** — Client-side token/session persistence
+
+## Backend
+
+**Node.js** — Backend runtime
+**Express.js** — REST API framework
+**JWT** — Authentication
+**CORS** — Frontend-backend communication
+**dotenv** — Environment variable configuration
+
+## API Testing
+
+**Postman** — REST API testing and endpoint verification
+
+## Data
+
+The Assignment 02 implementation uses **temporary/mock server-side data**.
+
+MongoDB/Mongoose database persistence is outside the current Assignment 02 scope and is planned for a later milestone.
 
 ---
 
-#  Week 1 Project Structure
+# Week 2 Architecture
+
+The application now follows a client-server architecture.
+
+```text
+                    CollabBoard
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+          Frontend              Backend
+          React/Vite            Node/Express
+              │                     │
+              │ Axios               │
+              └──────────API─────────┘
+                                    │
+                              REST Endpoints
+                                    │
+                 ┌──────────────────┼──────────────────┐
+                 │                  │                  │
+             Authentication      Projects           Tasks
+                 │                  │                  │
+               Users            Activities         Calendar
+                                    │
+                              Mock Server Data
+```
+
+The React frontend communicates with the Express backend through REST API endpoints.
+
+JWT bearer authentication is used to protect application endpoints.
+
+---
+
+# Project Structure
+
+The Week 2 project contains both the frontend and backend applications.
 
 ```text
 CollabBoard/
 │
-├── public/
+├── client/
+│   │
+│   ├── public/
+│   │
+│   └── src/
+│       ├── api/
+│       │   ├── api.js
+│       │   ├── authApi.js
+│       │   ├── projectApi.js
+│       │   ├── taskApi.js
+│       │   ├── userApi.js
+│       │   └── activityApi.js
+│       │
+│       ├── components/
+│       │   ├── layout/
+│       │   └── modals/
+│       │
+│       ├── context/
+│       │   ├── AppContext.jsx
+│       │   └── AuthContext.jsx
+│       │
+│       ├── pages/
+│       │   ├── Dashboard.jsx
+│       │   ├── Login.jsx
+│       │   ├── Projects.jsx
+│       │   ├── Tasks.jsx
+│       │   ├── Kanban.jsx
+│       │   ├── Team.jsx
+│       │   ├── Calendar.jsx
+│       │   ├── Activity.jsx
+│       │   └── Settings.jsx
+│       │
+│       ├── App.jsx
+│       └── main.jsx
 │
-├── src/
+├── server/
 │   │
-│   ├── components/
-│   │   │
-│   │   ├── layout/
-│   │   │   ├── ActivityItem.jsx
-│   │   │   ├── Avatar.jsx
-│   │   │   ├── Button.jsx
-│   │   │   ├── DashboardHeader.jsx
-│   │   │   ├── Logo.jsx
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── SearchBar.jsx
-│   │   │   ├── Sidebar.jsx
-│   │   │   ├── StatsCard.jsx
-│   │   │   ├── TaskCard.jsx
-│   │   │   ├── TaskColumn.jsx
-│   │   │   └── TeamMember.jsx
-│   │   │
-│   │   └── modals/
-│   │       └── NewTaskModal.jsx
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── projectController.js
+│   │   ├── taskController.js
+│   │   ├── userController.js
+│   │   ├── activityController.js
+│   │   └── calendarController.js
 │   │
-│   ├── context/
-│   │   └── AppContext.jsx
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── projectRoutes.js
+│   │   ├── taskRoutes.js
+│   │   ├── userRoutes.js
+│   │   ├── activityRoutes.js
+│   │   └── calendarRoutes.js
 │   │
-│   ├── data/
-│   │   ├── activities.js
-│   │   ├── project.js
-│   │   ├── tasks.js
-│   │   └── users.js
+│   ├── middleware/
+│   │   ├── authMiddleware.js
+│   │   └── errorMiddleware.js
 │   │
-│   ├── hooks/
-│   │   └── useLocalStorage.js
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── Project.js
+│   │   ├── Task.js
+│   │   └── Activity.js
 │   │
-│   ├── pages/
-│   │   ├── Dashboard.jsx
-│   │   └── Login.jsx
-│   │
-│   ├── App.jsx
-│   ├── App.css
-│   ├── index.css
-│   └── main.jsx
+│   ├── store.js
+│   ├── app.js
+│   ├── server.js
+│   ├── package.json
+│   └── .env
 │
-├── .gitignore
-├── index.html
+├── docs/
+│
 ├── package.json
-├── package-lock.json
-├── tailwind.config.js
-├── vite.config.js
-└── README.md
+├── README.md
+└── .gitignore
 ```
+
+> The exact directory structure should be kept synchronized with the actual repository. If a file or folder is not present in the final GitHub repository, remove it from this README.
 
 ---
 
-#  Component Structure
+# REST API
 
-The Week 1 frontend is organised using reusable React components.
+The backend provides REST API endpoints for the main CollabBoard functionality.
+
+## API Base URL
+
+During local development:
 
 ```text
-App
-│
-├── Login
-│   └── Logo
-│
-└── Dashboard
-    │
-    ├── Sidebar
-    │
-    ├── Navbar
-    │   └── SearchBar
-    │
-    ├── DashboardHeader
-    │
-    ├── StatsCard
-    │
-    ├── Kanban Board
-    │   │
-    │   ├── TaskColumn
-    │   │   └── TaskCard
-    │   │
-    │   ├── TaskColumn
-    │   │   └── TaskCard
-    │   │
-    │   └── TaskColumn
-    │       └── TaskCard
-    │
-    ├── ActivityItem
-    │
-    └── TeamMember
+http://localhost:5000/api
 ```
-
-The component structure supports the requirement for reusable React components and provides the foundation for the later development of the application.
 
 ---
 
-#  Week 1 Features
+# API Health Check
 
-## 1. Login Interface
+### GET
 
-A frontend login page has been created with:
+```text
+GET /api
+```
 
-Email input
-Password input
-Password visibility control
-Remember-me option
-Login button
-CollabBoard branding
-Dark-themed interface
+This endpoint is used to verify that the backend server and REST API are running correctly.
 
-The login page is currently a **frontend interface only**.
+Example:
+
+```text
+http://localhost:5000/api
+```
+
+---
+
+# Authentication API
+
+## Register
+
+```text
+POST /api/auth/register
+```
+
+Creates a new user account.
+
+## Login
+
+```text
+POST /api/auth/login
+```
+
+Authenticates a user and returns an authentication token.
+
+## Current User
+
+```text
+GET /api/auth/me
+```
+
+Returns information about the currently authenticated user.
+
+This endpoint requires a valid JWT bearer token.
+
+---
+
+# Project API
+
+## Get Projects
+
+```text
+GET /api/projects
+```
+
+Retrieves available projects.
+
+## Create Project
+
+```text
+POST /api/projects
+```
+
+Creates a new project.
+
+Project management operations are protected using authentication and the appropriate manager/admin authorization.
+
+---
+
+# Task API
+
+## Get Tasks
+
+```text
+GET /api/tasks
+```
+
+Retrieves tasks.
+
+## Create Task
+
+```text
+POST /api/tasks
+```
+
+Creates a new task.
+
+Task operations support the Kanban workflow and frontend task management interface.
+
+The frontend communicates task changes through the task API service.
+
+---
+
+# User API
+
+## Get Users
+
+```text
+GET /api/users
+```
+
+Retrieves CollabBoard users.
+
+The frontend uses the user API to display team member information and related user data.
+
+---
+
+# Activity API
+
+## Get Activities
+
+```text
+GET /api/activities
+```
+
+Retrieves recent workspace activity.
+
+The frontend loads activity information through the activity API service.
+
+---
+
+# Calendar API
+
+Calendar operations are provided through the calendar REST API.
+
+```text
+/api/calendar
+```
+
+The calendar API supports the calendar and reminder functionality displayed in the frontend.
+
+---
+
+# Authentication
+
+CollabBoard uses **JWT bearer authentication** for protected API endpoints.
+
+The general authentication flow is:
+
+```text
+User
+ │
+ │ Login
+ ▼
+React Frontend
+ │
+ │ POST /api/auth/login
+ ▼
+Express API
+ │
+ │ Validate credentials
+ ▼
+JWT Token
+ │
+ ▼
+Frontend
+ │
+ │ Store authentication token
+ ▼
+Protected API Requests
+ │
+ │ Authorization: Bearer <token>
+ ▼
+Auth Middleware
+ │
+ ▼
+Protected Controller
+```
+
+The authentication middleware verifies the JWT before allowing access to protected resources.
+
+---
+
+# Frontend API Integration
+
+The Week 2 frontend communicates with the backend using Axios-based API services.
+
+The frontend contains separate API service modules for different application areas, including:
+
+```text
+authApi
+projectApi
+taskApi
+userApi
+activityApi
+```
+
+The API client is responsible for:
+
+* Sending HTTP requests
+* Communicating with the Express server
+* Sending JSON request data
+* Attaching JWT authentication tokens
+* Handling API responses
+* Handling authentication errors
+
+---
+
+# Week 2 Features
+
+## 1. Login and Authentication
+
+The login interface from Week 1 has been integrated with the backend authentication API.
+
+Users can:
+
+* Enter their credentials
+* Send login requests to the backend
+* Receive an authentication token
+* Access protected application functionality
+* Retrieve their authenticated user information
 
 ---
 
 ## 2. Dashboard
 
-The main dashboard provides an overview of the project and contains:
+The dashboard provides an overview of the workspace.
 
- Navigation sidebar
-Top navigation bar
-Search interface
-Dashboard header
-Task statistics
-Kanban board
-Team members
-Recent activity
+It includes:
+
+* Navigation sidebar
+* Top navigation
+* Search interface
+* Dashboard statistics
+* Projects
+* Tasks
+* Kanban board
+* Team members
+* Recent activity
+
+Dashboard data can now be obtained through the backend API where implemented.
 
 ---
 
-## 3. Kanban Board
+## 3. Projects
 
-The main task management interface contains three workflow columns:
+The Projects page provides project management functionality.
+
+The frontend communicates with:
 
 ```text
-┌──────────────┐
-│    TO DO     │
-├──────────────┤
-│    Tasks     │
-└──────────────┘
-
-┌──────────────┐
-│    DOING     │
-├──────────────┤
-│    Tasks     │
-└──────────────┘
-
-┌──────────────┐
-│     DONE     │
-├──────────────┤
-│    Tasks     │
-└──────────────┘
+GET /api/projects
+POST /api/projects
 ```
 
-Each column is implemented using the reusable `TaskColumn` component.
+Projects are retrieved from the backend mock data store and new projects can be submitted through the REST API.
 
 ---
 
-## 4. Task Cards
+## 4. Tasks
 
-Individual tasks are displayed using the reusable `TaskCard` component.
+The task management functionality has been integrated with the backend.
 
-Task cards can display:
-
- Task title
-Task description
-Priority
-Category/tag
-Due date
-Assigned users
-Task status
-
----
-
-## 5. Mock Data
-
-The Week 1 application uses frontend mock data for:
-
-Projects
-Tasks
-Users
-Activities
-
-This allows the static frontend to demonstrate the intended application interface before backend functionality is introduced.
-
----
-
-## 6. New Task Modal
-
-A reusable `NewTaskModal` component provides the initial user interface for creating a task.
-
-The Week 1 implementation focuses on the frontend interaction and visual design.
-
----
-
-## 7. Team & Activity Interface
-
-The dashboard includes:
-
-Team member information
-User avatars
-Recent activity
-Activity items
-
-These components currently use mock data.
-
----
-
-#  UI Design
-
-The Week 1 interface follows a modern dark-themed design.
-
-### Design characteristics
-
-Dark background
-Purple accent colour
-Rounded cards
-Modern typography
-onsistent spacing
-Responsive layout
-Lucide icons
-Subtle Framer Motion animations
-Reusable Tailwind CSS styling
-
----
-
-#  Client-Side State
-
-The application uses:
+The frontend communicates with:
 
 ```text
-React Context API
+GET /api/tasks
+POST /api/tasks
 ```
 
-for shared application state.
-
-A custom:
-
-```text
-useLocalStorage
-```
-
-hook is also included for client-side persistence.
-
-These provide the initial frontend state management foundation for the application.
+The Kanban interface displays tasks according to their workflow status.
 
 ---
 
-#  Running the Week 1 Application
+## 5. Kanban Board
+
+The Kanban board contains:
+
+```text
+TO DO
+   │
+   ▼
+DOING
+   │
+   ▼
+DONE
+```
+
+Tasks are displayed using reusable task cards.
+
+The frontend uses the task API to communicate task-related operations with the backend.
+
+---
+
+## 6. Team Members
+
+The Team Members page displays users retrieved through the user API.
+
+```text
+GET /api/users
+```
+
+This provides the frontend with user information required for the workspace interface.
+
+---
+
+## 7. Workspace Activity
+
+The activity page displays recent workspace activities.
+
+```text
+GET /api/activities
+```
+
+Activity information is retrieved through the backend API rather than relying only on the original static frontend data.
+
+---
+
+## 8. Calendar and Reminders
+
+The application includes a calendar and reminder interface.
+
+Calendar operations are provided through the backend calendar API.
+
+---
+
+## 9. Settings
+
+The Settings page provides the application's settings interface and user-related options.
+
+---
+
+# Mock Data
+
+Assignment 02 uses **temporary/mock server-side data**.
+
+The backend maintains application data in a server-side store instead of a permanent database.
+
+The current mock data covers areas such as:
+
+* Users
+* Projects
+* Tasks
+* Activities
+
+This approach allows the team to demonstrate working REST API communication before introducing permanent database persistence.
+
+---
+
+# Postman API Testing
+
+The REST APIs are tested using **Postman**.
+
+The Postman collection contains requests for the major backend operations.
+
+Example collection structure:
+
+```text
+CollabBoard API
+│
+├── Health Check
+│
+├── Authentication
+│   ├── Register
+│   ├── Login
+│   └── Current User
+│
+├── Projects
+│   ├── Get Projects
+│   └── Create Project
+│
+├── Tasks
+│   ├── Get Tasks
+│   └── Create Task
+│
+├── Users
+│   └── Get Users
+│
+├── Activities
+│   └── Get Activities
+│
+└── Calendar
+    └── Calendar Operations
+```
+
+Postman is used to verify:
+
+* HTTP methods
+* Request URLs
+* Request bodies
+* Authentication headers
+* Response status codes
+* Response JSON data
+* Protected endpoints
+
+---
+
+# Running the Application
 
 ## Prerequisites
 
-Install:
+Install the following software:
 
 * Node.js
 * npm
+* Git
+
+Postman is recommended for API testing.
 
 ---
 
-## Install Dependencies
+# Clone the Repository
 
-Clone the organization's repository:
+Clone the team's GitHub repository:
 
 ```bash
-git clonehttps://github.com/CollabBoard-Team-Full-Stack-Development/CollabBoard.git
+git clone https://github.com/CollabBoard-Team-Full-Stack-Development/CollabBoard-Full-Stack-Development-Commits.git
 ```
 
 Navigate into the project:
 
 ```bash
-cd CollabBoard
+cd CollabBoard-Full-Stack-Development-Commits
+```
+
+---
+
+# Install Backend Dependencies
+
+Open a terminal and navigate to the server directory:
+
+```bash
+cd server
 ```
 
 Install dependencies:
@@ -328,7 +641,65 @@ npm install
 
 ---
 
-## Start Development Server
+# Configure Backend Environment
+
+Create a `.env` file inside the `server` directory.
+
+Example:
+
+```env
+PORT=5000
+JWT_SECRET=your_jwt_secret
+CLIENT_URL=http://localhost:5173
+```
+
+Use the actual environment variables required by the final project configuration.
+
+Do not commit private secrets to GitHub.
+
+---
+
+# Start the Backend
+
+From the `server` directory:
+
+```bash
+npm run dev
+```
+
+The backend should run on:
+
+```text
+http://localhost:5000
+```
+
+The API base URL is:
+
+```text
+http://localhost:5000/api
+```
+
+---
+
+# Install Frontend Dependencies
+
+Open another terminal.
+
+Navigate to the client directory:
+
+```bash
+cd client
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+---
+
+# Start the Frontend
 
 Run:
 
@@ -336,150 +707,260 @@ Run:
 npm run dev
 ```
 
-Vite will provide a local address similar to:
+Vite will display the local development address.
+
+The frontend is normally available at:
 
 ```text
-http://localhost:3000
+http://localhost:5173
 ```
 
-Open the displayed address in your browser.
+Open the displayed address in a web browser.
 
 ---
 
-#  Week 1 Testing
+# Running Frontend and Backend Together
 
-The Week 1 testing process focuses on frontend functionality and integration.
+The application requires both services to be running.
+
+```text
+Terminal 1
+──────────
+Backend
+npm run dev
+        │
+        ▼
+localhost:5000
+
+
+Terminal 2
+──────────
+Frontend
+npm run dev
+        │
+        ▼
+localhost:5173
+```
+
+The React frontend communicates with the Express backend through the configured API/proxy.
+
+---
+
+# Testing
+
+Week 2 testing focuses on both backend REST APIs and frontend-backend integration.
 
 The team checks:
 
-Application starts successfully
-Login page loads
-Dashboard loads
-Navigation components render correctly
-Kanban columns render correctly
-Task cards display correctly
-Mock data appears correctly
-New task modal opens correctly
-Responsive layout works
-No major console errors
-No broken imports
-Production build completes successfully
+* Backend server starts successfully
+* API health check responds successfully
+* User registration works
+* User login works
+* JWT authentication works
+* Protected endpoints reject unauthenticated requests
+* Authenticated requests are accepted
+* Projects can be retrieved
+* Projects can be created
+* Tasks can be retrieved
+* Tasks can be created
+* Users can be retrieved
+* Activities can be retrieved
+* Calendar functionality works
+* Frontend successfully communicates with the backend
+* Dashboard loads correctly
+* Projects page loads correctly
+* Tasks page loads correctly
+* Kanban board loads correctly
+* Team Members page loads correctly
+* Calendar page loads correctly
+* Activity page loads correctly
+* Settings page loads correctly
+* Employee dashboard loads correctly
+* No major console errors occur
+* No broken API requests remain
 
-Production build can be checked using:
+---
+
+# Production Build
+
+The frontend production build can be checked using:
 
 ```bash
 npm run build
 ```
 
+A successful build confirms that the frontend can be compiled without major build errors.
+
 ---
 
-# 🌿 GitHub Team Workflow
+# GitHub Team Workflow
 
-The Week 1 project uses a branch-based workflow.
+The Week 2 project continues to use a branch-based Git workflow.
 
 ```text
 main
 │
-├── member-01-core
-├── member-02-navigation
-├── member-03-components
-├── member-04-dashboard
-├── member-05-kanban
-├── member-06-task-activity
-├── member-07-login
-├── member-08-data
-└── member-09-styling
+├── member-01
+├── member-02
+├── member-03
+├── member-04
+├── member-05
+├── member-06
+├── member-07
+├── member-08
+└── member-09
 ```
 
-Each member works on their assigned branch.
+Each team member contributes through their assigned branch.
 
-Completed work is pushed to GitHub and merged into the `main` branch after integration/review.
+Completed work is committed and pushed to GitHub before integration into the main branch.
 
-The project brief specifically states that Git history is considered during grading and recommends feature branches and pull requests.
-
----
-
-#  Week 1 Team Work Division
-
-| Member    | Week 1 Responsibility       |
-| --------- | --------------------------- |
-| Member 01 | Application Core & Context  |
-| Member 02 | Navigation                  |
-| Member 03 | Reusable UI Components      |
-| Member 04 | Dashboard & Statistics      |
-| Member 05 | Kanban Board                |
-| Member 06 | Task Creation & Activity    |
-| Member 07 | Login Interface             |
-| Member 08 | Mock Data                   |
-| Member 09 | Styling, QA & Documentation |
-
-Each member contributes through their assigned Git branch.
+The repository history should contain contributions from all nine team members.
 
 ---
 
-# 📐 Week 1 Documentation
+# Assignment 02 Git Tag
 
-The Week 1 project documentation includes:
+The required Git tag for Assignment 02 is:
 
 ```text
-docs/
-│
-├── component-tree.md
-│
-├── wireframes/
-│   ├── login-wireframe.png
-│   └── dashboard-wireframe.png
-│
-└── members/
-    ├── member-01.md
-    ├── member-02.md
-    ├── member-03.md
-    ├── member-04.md
-    ├── member-05.md
-    ├── member-06.md
-    ├── member-07.md
-    ├── member-08.md
-    └── member-09.md
+assignment-02-rest-api
 ```
 
-These documents provide evidence of the Week 1 design process, component architecture, wireframes, and individual contributions.
+The tag represents:
+
+```text
+Assignment 02 - Working REST APIs
+(with mock data)
+Integrated with Frontend
+```
+
+The final tagged commit should contain the integrated frontend and backend implementation.
+
+Before submission, verify that:
+
+* The tag exists on GitHub
+* The tag points to the final Assignment 02 commit
+* All required frontend and backend files are included
+* Each team member has a visible contribution/commit
+* The final integrated project can be run successfully
 
 ---
 
-#  Week 1 Completion Checklist
 
-| Week 1 Requirement           
-| ---------------------------- 
-| React application scaffolded 
-| Reusable React components    
-| Board UI                     
-| Column UI                    
-| TaskCard UI                  
-| Mock data                   
-| Dashboard                    
-| Login interface              
-| Component tree               
-| Wireframes                   
-| GitHub repository            
-| Team branches                
-The completed items directly correspond to the M1 static frontend milestone described in the project brief.
 
----
+# Assignment 02 API Endpoints
 
-#  Week 1 Scope
+| Module       | Method | Endpoint             |
+| ------------ | ------ | -------------------- |
+| Health       | GET    | `/api`               |
+| Register     | POST   | `/api/auth/register` |
+| Login        | POST   | `/api/auth/login`    |
+| Current User | GET    | `/api/auth/me`       |
+| Projects     | GET    | `/api/projects`      |
+| Projects     | POST   | `/api/projects`      |
+| Tasks        | GET    | `/api/tasks`         |
+| Tasks        | POST   | `/api/tasks`         |
+| Users        | GET    | `/api/users`         |
+| Activities   | GET    | `/api/activities`    |
+| Calendar     | API    | `/api/calendar`      |
 
-This repository represents **Week 1 only**.
-
-The focus of this milestone is the frontend foundation and static application interface. Backend APIs, database persistence, automated testing, real-time communication, Docker, and public deployment are outside the scope of the Week 1 implementation.
+The documented Assignment 02 report includes the health check, authentication, project, task, user and activity endpoints listed above.
 
 ---
 
-## Project Status
+# Documentation and Evidence
 
-**Milestone:** M1 — Static Front-End Skeleton
+The Assignment 02 documentation includes evidence of:
 
-**Status:** Week 1 Development Completed
+* REST API implementation
+* Postman API testing
+* Authentication
+* Project API
+* Task API
+* User API
+* Activity API
+* Frontend-backend integration
+* Login page
+* Manager dashboard
+* Projects page
+* All Tasks page
+* Kanban board
+* Team Members page
+* Calendar and reminders
+* Workspace activity
+* Settings page
+* Employee dashboard
+
+---
+
+# Week 2 Scope
+
+This repository represents the **Week 2 Assignment 02 implementation**.
+
+The main focus of this milestone is:
+
+```text
+Working REST APIs
+        +
+Mock Server Data
+        +
+React Frontend Integration
+        +
+JWT Authentication
+        +
+API Testing
+```
+
+The current implementation deliberately uses temporary/mock server-side data.
+
+The following areas are outside the current Assignment 02 scope and are planned for later milestones:
+
+* MongoDB/Mongoose persistent database
+* Automated testing and CI
+* Full real-time synchronization
+* Other later project milestones
+
+---
+
+# Assignment 02 Completion Checklist
+
+| Requirement                  | Status                     |
+| ---------------------------- | -------------------------- |
+| React frontend               | Completed                  |
+| Node.js backend              | Completed                  |
+| Express REST API             | Completed                  |
+| Mock server-side data        | Completed                  |
+| Authentication API           | Completed                  |
+| JWT authentication           | Completed                  |
+| Protected API routes         | Completed                  |
+| Project API                  | Completed                  |
+| Task API                     | Completed                  |
+| User API                     | Completed                  |
+| Activity API                 | Completed                  |
+| Calendar API                 | Completed                  |
+| Frontend API integration     | Completed                  |
+| Postman API testing          | Completed                  |
+| Frontend-backend integration | Completed                  |
+| GitHub repository            | Completed                  |
+| README documentation         | Completed                  |
+
+---
+
+# Project Status
+
+**Milestone:** Assignment 02 — Working REST APIs (with mock data) Integrated with Frontend
+
+**Status:** Week 2 Development Completed
 
 **Application:** CollabBoard
+
+**Architecture:** React + Node.js + Express REST API
+
+**Authentication:** JWT Bearer Authentication
+
+**Data Source:** Temporary/Mock Server-Side Data
+
+**API Testing:** Postman
 
 **Team Size:** 9 Members
