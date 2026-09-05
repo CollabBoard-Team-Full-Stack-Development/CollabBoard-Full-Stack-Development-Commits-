@@ -20,6 +20,7 @@ const io = new Server(server, {
     }
 });
 
+// Track online users
 const onlineUsers = new Map();
 
 io.on('connection', (socket) => {
@@ -64,3 +65,7 @@ const startServer = async () => {
 };
 
 startServer();
+server.listen(PORT, () => {
+    console.log(`CollabBoard API running at http://localhost:${PORT}`);
+    console.log('Socket.IO enabled');
+});
