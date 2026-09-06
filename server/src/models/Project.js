@@ -1,69 +1,49 @@
-const { projects } = require('../data/store');
+const mongoose = require('mongoose');
 
-const Project = {
-    findAll: () => {
-        return projects;
+const projectSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        description: {
+            type: String,
+            default: ''
+        },
+        color: {
+            type: String,
+            default: 'bg-blue-500'
+        },
+        category: {
+            type: String,
+            default: 'General'
+        },
+        status: {
+            type: String,
+            default: 'Active'
+        },
+        dueDate: {
+            type: Date
+        },
+        progress: {
+            type: Number,
+            default: 0,
+            min: 0,
+            max: 100
+        },
+        teamMembers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ]
     },
-
-    findById: (id) => {
-        return projects.find(
-            project => project.id === id
-        );
-    },
-
-    create: (projectData) => {
-        const newProject = {
-            id: 'p_' + Date.now(),
-            name: projectData.name,
-            description:
-                projectData.description || '',
-            color:
-                projectData.color ||
-                'bg-blue-500',
-            category:
-                projectData.category ||
-                'General',
-            status: 'Active',
-            dueDate:
-                projectData.dueDate ||
-                new Date()
-                    .toISOString()
-                    .split('T')[0],
-            progress: 0,
-            teamMembers:
-                projectData.teamMembers || []
-        };
-
-        projects.push(newProject);
-
-        return newProject;
-    },
-
-    update: (id, updates) => {
-        const project = projects.find(
-            project => project.id === id
-        );
-
-        if (!project) {
-            return null;
-        }
-
-        Object.assign(project, updates);
-
-        return project;
-    },
-
-    delete: (id) => {
-        const index = projects.findIndex(
-            project => project.id === id
-        );
-
-        if (index === -1) {
-            return null;
-        }
-
-        return projects.splice(index, 1)[0];
+    {
+        timestamps: true
     }
-};
+);
+
+const Project = mongoose.model('Project', projectSchema);
 
 module.exports = Project;
