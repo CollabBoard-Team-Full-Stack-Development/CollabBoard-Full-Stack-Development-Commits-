@@ -1,70 +1,83 @@
-const {
-calendarEvents,
-addCalendarEvent,
-deleteCalendarEvent
-} = require('../data/store');
+const CalendarEvent = require('../models/CalendarEvent');
 
-const getCalendarEvents = (req, res) => {
-const userId = req.user.id;
+const serializeEvent = (event) => {
+    const obj = event.toObject();
 
+    const {
+        _id,
+        ...rest
+    } = obj;
 
-const events = calendarEvents.filter(
-    (event) => event.userId === userId
-);
-
-res.json(events);
-
-
+    return {
+        ...rest,
+        id: _id.toString()
+    };
 };
 
-const createCalendarEvent = (req, res) => {
-const { title, date, type, color } = req.body;
+const getCalendarEvents = async (req, res, next) => {
+    try {
+        const events = await CalendarEvent.find({
+            userId: req.user.id
+        }).sort({ date: 1 });
 
-if (!title || !date) {
-    return res.status(400).json({
-        error: 'Title and date are required'
-    });
-}
-
-const newEvent = addCalendarEvent({
-    userId: req.user.id,
-    title,
-    date,
-    type: type || 'reminder',
-    color: color || '#8B5CF6'
-});
-
-res.status(201).json(newEvent);
-
-
+        res.json(events.map(serializeEvent));
+    } catch (error) {
+        next(error);
+    }
 };
 
-const deleteCalendarEventById = (req, res) => {
-const { id } = req.params;
-const userId = req.user.id;
+const createCalendarEvent = async (req, res, next) => {
+    try {
+        const {
+            title,
+            date,
+            type,
+            color
+        } = req.body;
 
+        if (!title || !date) {
+            return res.status(400).json({
+                error: 'Title and date are required'
+            });
+        }
 
-const event = calendarEvents.find(
-    (item) => item.id === id && item.userId === userId
-);
+        const event = await CalendarEvent.create({
+            userId: req.user.id,
+            title,
+            date,
+            type: type || 'reminder',
+            color: color || '#8B5CF6'
+        });
 
-if (!event) {
-    return res.status(404).json({
-        error: 'Calendar event not found'
-    });
-}
+        res.status(201).json(serializeEvent(event));
+    } catch (error) {
+        next(error);
+    }
+};
 
-deleteCalendarEvent(id);
+const deleteCalendarEventById = async (req, res, next) => {
+    try {
+        const event = await CalendarEvent.findOneAndDelete({
+            _id: req.params.id,
+            userId: req.user.id
+        });
 
-res.json({
-    message: 'Calendar event deleted successfully'
-});
+        if (!event) {
+            return res.status(404).json({
+                error: 'Calendar event not found'
+            });
+        }
 
-
+        res.json({
+            message: 'Calendar event deleted successfully'
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 
 module.exports = {
-getCalendarEvents,
-createCalendarEvent,
-deleteCalendarEventById
+    getCalendarEvents,
+    createCalendarEvent,
+    deleteCalendarEventById
 };
