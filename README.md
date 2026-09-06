@@ -1,42 +1,45 @@
 # CollabBoard — Collaborative Kanban Platform
 
-## Week 2 — Working REST APIs with Mock Data Integrated with Frontend
-
 CollabBoard is a collaborative Kanban-style task management application developed as part of the Full Stack Application project.
 
-This repository contains the **Week 2 implementation**, extending the Week 1 static React frontend with a working **Node.js + Express REST API** using temporary/mock server-side data.
+This repository contains the **Week 3 implementation**, extending the Week 2 REST API application by introducing **MongoDB database persistence using Mongoose** and improving the application's **offline caching and data recovery capabilities**.
 
-The Week 2 milestone focuses on connecting the frontend application with the backend API, implementing authentication, protected API routes, project and task operations, user management, activity data, calendar operations, and frontend-backend integration.
+The Week 3 milestone focuses on replacing temporary server-side mock data with persistent MongoDB data, implementing Mongoose models, connecting the Express backend to MongoDB Atlas, seeding the database with initial data, maintaining authenticated API access, and supporting frontend data caching for offline use.
 
 ---
 
-# Week 2 Objectives
+# Week 3 — MongoDB Persistence and Offline Support
 
-The main objectives completed during Week 2 are:
+## Week 3 Objectives
 
-* Extend the Week 1 React frontend
-* Create a Node.js backend
-* Create an Express REST API
-* Implement authentication endpoints
-* Implement JWT-based authentication
-* Implement authentication middleware
-* Create protected API routes
-* Create project REST API endpoints
-* Create task REST API endpoints
-* Create user REST API endpoints
-* Create activity REST API endpoints
-* Create calendar REST API endpoints
-* Integrate frontend API services with the backend
-* Connect the React application to the REST API
-* Replace frontend-only operations with API requests where implemented
-* Handle API authentication using JWT bearer tokens
-* Implement manager/admin authorization for project management operations
-* Use temporary/mock server-side data for Assignment 02
-* Test REST APIs using Postman
-* Test frontend-backend integration
+The main objectives completed during Week 3 are:
+
+* Extend the Week 2 REST API implementation
+* Connect the backend to MongoDB Atlas
+* Configure Mongoose
+* Create MongoDB/Mongoose data models
+* Replace temporary mock data with persistent database data
+* Implement persistent users
+* Implement persistent projects
+* Implement persistent tasks
+* Implement persistent activities
+* Implement persistent calendar events
+* Maintain JWT authentication with MongoDB users
+* Protect authenticated API routes
+* Implement database-backed CRUD operations
+* Implement MongoDB references between collections
+* Populate related users and project data
+* Seed the MongoDB database with initial CollabBoard data
+* Integrate MongoDB-backed APIs with the React frontend
+* Implement frontend local caching
+* Support offline access using cached application data
+* Refresh cached data when the application reconnects
+* Preserve cached data when the backend is temporarily unavailable
+* Test MongoDB-backed REST APIs using Postman
+* Verify frontend-backend-database integration
 * Maintain the GitHub branch and commit workflow
 
-The Week 2 implementation corresponds to the **Assignment 02 — Working REST APIs (with mock data) Integrated with Frontend** milestone.
+The Week 3 implementation corresponds to the **Assignment 03 — MongoDB/Mongoose Database Integration and Persistence** milestone.
 
 ---
 
@@ -44,71 +47,304 @@ The Week 2 implementation corresponds to the **Assignment 02 — Working REST AP
 
 ## Frontend
 
-**React 18** — Frontend framework
-**Vite** — Development and build tool
-**React Router v6** — Frontend routing
-**Tailwind CSS** — Styling
-**Lucide React** — Icons
-**Framer Motion** — Animations
-**React Context API** — Application state
-**Axios** — Frontend HTTP/API communication
-**localStorage** — Client-side token/session persistence
+* **React 18**
+* **Vite**
+* **React Router v6**
+* **Tailwind CSS**
+* **Lucide React**
+* **Framer Motion**
+* **React Context API**
+* **Axios**
+* **localStorage**
+* **Session/Local Storage authentication token persistence**
 
 ## Backend
 
-**Node.js** — Backend runtime
-**Express.js** — REST API framework
-**JWT** — Authentication
-**CORS** — Frontend-backend communication
-**dotenv** — Environment variable configuration
+* **Node.js**
+* **Express.js**
+* **Mongoose**
+* **MongoDB Atlas**
+* **JWT**
+* **bcryptjs**
+* **CORS**
+* **dotenv**
+
+## Database
+
+* **MongoDB Atlas**
+* **MongoDB database:** `CollabBoard`
+* Mongoose schemas and models
+* Persistent MongoDB collections
 
 ## API Testing
 
-**Postman** — REST API testing and endpoint verification
-
-## Data
-
-The Assignment 02 implementation uses **temporary/mock server-side data**.
-
-MongoDB/Mongoose database persistence is outside the current Assignment 02 scope and is planned for a later milestone.
+* **Postman**
 
 ---
 
-# Week 2 Architecture
+# Week 3 Architecture
 
-The application now follows a client-server architecture.
+The Week 3 architecture extends the Week 2 client-server system by adding MongoDB persistence.
 
 ```text
-                    CollabBoard
-                         │
-              ┌──────────┴──────────┐
-              │                     │
-          Frontend              Backend
-          React/Vite            Node/Express
-              │                     │
-              │ Axios               │
-              └──────────API─────────┘
-                                    │
-                              REST Endpoints
-                                    │
-                 ┌──────────────────┼──────────────────┐
-                 │                  │                  │
-             Authentication      Projects           Tasks
-                 │                  │                  │
-               Users            Activities         Calendar
-                                    │
-                              Mock Server Data
+                         CollabBoard
+                              │
+                ┌─────────────┴─────────────┐
+                │                           │
+           Frontend                     Backend
+          React/Vite                 Node/Express
+                │                           │
+                │ Axios                     │
+                └────────── API ────────────┘
+                                            │
+                                     Authentication
+                                            │
+                                      JWT Middleware
+                                            │
+                                      Controllers
+                                            │
+                                        Mongoose
+                                            │
+                                      MongoDB Atlas
+                                            │
+                         ┌──────────────────┼──────────────────┐
+                         │                  │                  │
+                       Users            Projects             Tasks
+                         │                  │                  │
+                         └──────────── Activities ─────────────┘
+                                            │
+                                      Calendar Events
 ```
 
-The React frontend communicates with the Express backend through REST API endpoints.
+The React frontend communicates with the Express REST API.
 
-JWT bearer authentication is used to protect application endpoints.
+The Express backend uses Mongoose to communicate with MongoDB Atlas.
+
+MongoDB provides persistent storage for application data.
+
+---
+
+# Database Architecture
+
+Week 3 introduces MongoDB as the permanent data persistence layer.
+
+The main database collections are:
+
+```text
+CollabBoard
+│
+├── users
+├── projects
+├── tasks
+├── activities
+└── calendarevents
+```
+
+These collections replace the temporary in-memory/mock server-side data used during Week 2.
+
+---
+
+# MongoDB Atlas
+
+The project uses **MongoDB Atlas** for cloud database hosting.
+
+The backend connects to MongoDB Atlas through the environment variable:
+
+```env
+MONGODB_URI=your_mongodb_connection_string
+```
+
+The database connection is handled through:
+
+```text
+server/src/config/db.js
+```
+
+The application uses Mongoose to establish the database connection.
+
+---
+
+# Mongoose Models
+
+The backend contains Mongoose models for the main application entities.
+
+```text
+server/src/models/
+│
+├── User.js
+├── Project.js
+├── Task.js
+├── Activity.js
+└── CalendarEvent.js
+```
+
+## User Model
+
+The User model stores authentication and team-member information.
+
+Main fields include:
+
+* name
+* email
+* passwordHash
+* role
+* jobTitle
+* department
+* status
+* avatar
+* bio
+* tasksCompleted
+* activeTasks
+* isActive
+* createdAt
+* updatedAt
+
+Email addresses are uniquely indexed to prevent duplicate user accounts.
+
+---
+
+## Project Model
+
+The Project model stores project information.
+
+Main fields include:
+
+* name
+* description
+* color
+* category
+* status
+* dueDate
+* progress
+* teamMembers
+* createdAt
+* updatedAt
+
+The `teamMembers` field contains references to MongoDB User documents.
+
+---
+
+## Task Model
+
+The Task model stores Kanban tasks.
+
+Main fields include:
+
+* projectId
+* title
+* description
+* status
+* priority
+* dueDate
+* assignees
+* createdAt
+* updatedAt
+
+Tasks reference their related project and assigned users through MongoDB ObjectIds.
+
+Supported task statuses include:
+
+```text
+To Do
+Doing
+Done
+```
+
+Supported priorities include:
+
+```text
+Low
+Medium
+High
+Urgent
+```
+
+---
+
+## Activity Model
+
+The Activity model stores workspace activity history.
+
+Main fields include:
+
+* user
+* action
+* target
+* from
+* to
+* createdAt
+* updatedAt
+
+Activities can reference the user responsible for the activity.
+
+---
+
+## Calendar Event Model
+
+The CalendarEvent model stores authenticated user's calendar and reminder events.
+
+Main fields include:
+
+* userId
+* title
+* date
+* type
+* color
+* createdAt
+* updatedAt
+
+Calendar events are associated with individual users.
+
+---
+
+# Database Relationships
+
+MongoDB references are used to connect related documents.
+
+```text
+USER
+ │
+ ├───────────────┐
+ │               │
+ │               └── ACTIVITY
+ │
+ ├───────────────┐
+ │               │
+ │               └── CALENDAR_EVENT
+ │
+ ├───────────────┐
+ │               │
+ │               └── PROJECT
+ │                     │
+ │                     └── TASK
+ │
+ └── TASK
+```
+
+More specifically:
+
+```text
+User
+ ├── Projects (team member)
+ ├── Tasks (assignee)
+ ├── Activities
+ └── Calendar Events
+
+Project
+ └── Tasks
+
+Task
+ ├── Project
+ └── Users (assignees)
+```
+
+Mongoose `ObjectId` references and `populate()` are used where related document information is required by the API.
 
 ---
 
 # Project Structure
 
-The Week 2 project contains both the frontend and backend applications.
+The Week 3 project contains both the React frontend and Node/Express backend.
 
 ```text
 CollabBoard/
@@ -119,12 +355,13 @@ CollabBoard/
 │   │
 │   └── src/
 │       ├── api/
-│       │   ├── api.js
+│       │   ├── apiClient.js
 │       │   ├── authApi.js
 │       │   ├── projectApi.js
 │       │   ├── taskApi.js
 │       │   ├── userApi.js
-│       │   └── activityApi.js
+│       │   ├── activityApi.js
+│       │   └── calendarApi.js
 │       │
 │       ├── components/
 │       │   ├── layout/
@@ -132,70 +369,85 @@ CollabBoard/
 │       │
 │       ├── context/
 │       │   ├── AppContext.jsx
-│       │   └── AuthContext.jsx
+│       │   ├── AuthContext.jsx
+│       │   └── SocketContext.jsx
+│       │
+│       ├── hooks/
+│       │   ├── useLocalStorage.js
+│       │   └── useOnlineStatus.js
 │       │
 │       ├── pages/
+│       │   ├── ActivityPage.jsx
+│       │   ├── Boards.jsx
+│       │   ├── CalendarPage.jsx
 │       │   ├── Dashboard.jsx
+│       │   ├── EmployeeDashboard.jsx
+│       │   ├── Employees.jsx
 │       │   ├── Login.jsx
+│       │   ├── ManagerDashboard.jsx
 │       │   ├── Projects.jsx
-│       │   ├── Tasks.jsx
-│       │   ├── Kanban.jsx
-│       │   ├── Team.jsx
-│       │   ├── Calendar.jsx
-│       │   ├── Activity.jsx
-│       │   └── Settings.jsx
+│       │   ├── Register.jsx
+│       │   ├── SettingsPage.jsx
+│       │   └── Tasks.jsx
 │       │
+│       ├── data/
+│       ├── mocks/
+│       ├── services/
 │       ├── App.jsx
 │       └── main.jsx
 │
 ├── server/
 │   │
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── projectController.js
-│   │   ├── taskController.js
-│   │   ├── userController.js
-│   │   ├── activityController.js
-│   │   └── calendarController.js
+│   ├── src/
+│   │   ├── config/
+│   │   │   └── db.js
+│   │   │
+│   │   ├── controllers/
+│   │   │   ├── authController.js
+│   │   │   ├── projectController.js
+│   │   │   ├── taskController.js
+│   │   │   ├── userController.js
+│   │   │   ├── activityController.js
+│   │   │   └── calendarController.js
+│   │   │
+│   │   ├── data/
+│   │   │   └── store.js
+│   │   │
+│   │   ├── middleware/
+│   │   │   ├── authMiddleware.js
+│   │   │   └── errorMiddleware.js
+│   │   │
+│   │   ├── models/
+│   │   │   ├── User.js
+│   │   │   ├── Project.js
+│   │   │   ├── Task.js
+│   │   │   ├── Activity.js
+│   │   │   └── CalendarEvent.js
+│   │   │
+│   │   ├── routes/
+│   │   │   ├── authRoutes.js
+│   │   │   ├── projectRoutes.js
+│   │   │   ├── taskRoutes.js
+│   │   │   ├── userRoutes.js
+│   │   │   ├── activityRoutes.js
+│   │   │   └── calendarRoutes.js
+│   │   │
+│   │   └── seed.js
 │   │
-│   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── projectRoutes.js
-│   │   ├── taskRoutes.js
-│   │   ├── userRoutes.js
-│   │   ├── activityRoutes.js
-│   │   └── calendarRoutes.js
-│   │
-│   ├── middleware/
-│   │   ├── authMiddleware.js
-│   │   └── errorMiddleware.js
-│   │
-│   ├── models/
-│   │   ├── User.js
-│   │   ├── Project.js
-│   │   ├── Task.js
-│   │   └── Activity.js
-│   │
-│   ├── store.js
-│   ├── app.js
+│   ├── data.json
 │   ├── server.js
 │   ├── package.json
 │   └── .env
-│
-├── docs/
-│
-├── package.json
-├── README.md
-└── .gitignore
+
 ```
 
-> The exact directory structure should be kept synchronized with the actual repository. If a file or folder is not present in the final GitHub repository, remove it from this README.
+> The structure above reflects the Week 3 project structure present in the current implementation. Files that are no longer used for application persistence should be removed or clearly treated as legacy/mock files before final submission.
 
 ---
 
 # REST API
 
-The backend provides REST API endpoints for the main CollabBoard functionality.
+The Week 3 backend continues to expose REST API endpoints while changing the underlying data source from mock server-side data to MongoDB.
 
 ## API Base URL
 
@@ -215,7 +467,7 @@ http://localhost:5000/api
 GET /api
 ```
 
-This endpoint is used to verify that the backend server and REST API are running correctly.
+Used to verify that the backend REST API is running.
 
 Example:
 
@@ -233,7 +485,11 @@ http://localhost:5000/api
 POST /api/auth/register
 ```
 
-Creates a new user account.
+Creates a new MongoDB user document.
+
+Passwords are hashed using bcrypt before being stored.
+
+---
 
 ## Login
 
@@ -241,7 +497,11 @@ Creates a new user account.
 POST /api/auth/login
 ```
 
-Authenticates a user and returns an authentication token.
+Authenticates a user against the MongoDB `users` collection.
+
+A successful login returns a JWT authentication token.
+
+---
 
 ## Current User
 
@@ -249,9 +509,13 @@ Authenticates a user and returns an authentication token.
 GET /api/auth/me
 ```
 
-Returns information about the currently authenticated user.
+Returns the currently authenticated MongoDB user.
 
-This endpoint requires a valid JWT bearer token.
+This endpoint requires:
+
+```text
+Authorization: Bearer <JWT_TOKEN>
+```
 
 ---
 
@@ -263,7 +527,21 @@ This endpoint requires a valid JWT bearer token.
 GET /api/projects
 ```
 
-Retrieves available projects.
+Retrieves projects from MongoDB.
+
+Administrators/managers can access the available project data, while employee access is restricted according to project membership.
+
+---
+
+## Get Project
+
+```text
+GET /api/projects/:id
+```
+
+Retrieves a specific project using its MongoDB ObjectId.
+
+---
 
 ## Create Project
 
@@ -271,9 +549,37 @@ Retrieves available projects.
 POST /api/projects
 ```
 
-Creates a new project.
+Creates a new project document in MongoDB.
 
-Project management operations are protected using authentication and the appropriate manager/admin authorization.
+---
+
+## Update Project
+
+```text
+PATCH /api/projects/:id
+```
+
+Updates an existing MongoDB project document.
+
+---
+
+## Delete Project
+
+```text
+DELETE /api/projects/:id
+```
+
+Deletes a project from MongoDB.
+
+---
+
+## Add Project Member
+
+```text
+POST /api/projects/:id/members
+```
+
+Adds a user to a project's team member list.
 
 ---
 
@@ -285,7 +591,19 @@ Project management operations are protected using authentication and the appropr
 GET /api/tasks
 ```
 
-Retrieves tasks.
+Retrieves tasks stored in MongoDB.
+
+---
+
+## Get Task
+
+```text
+GET /api/tasks/:id
+```
+
+Retrieves a specific task.
+
+---
 
 ## Create Task
 
@@ -293,11 +611,35 @@ Retrieves tasks.
 POST /api/tasks
 ```
 
-Creates a new task.
+Creates a new task document in MongoDB.
 
-Task operations support the Kanban workflow and frontend task management interface.
+---
 
-The frontend communicates task changes through the task API service.
+## Update Task
+
+```text
+PATCH /api/tasks/:id
+```
+
+Updates task information such as:
+
+* title
+* description
+* status
+* priority
+* due date
+* project
+* assignees
+
+---
+
+## Delete Task
+
+```text
+DELETE /api/tasks/:id
+```
+
+Deletes a task from MongoDB.
 
 ---
 
@@ -309,9 +651,27 @@ The frontend communicates task changes through the task API service.
 GET /api/users
 ```
 
-Retrieves CollabBoard users.
+Retrieves users from the MongoDB `users` collection.
 
-The frontend uses the user API to display team member information and related user data.
+---
+
+## Update User
+
+```text
+PATCH /api/users/:id
+```
+
+Updates user information.
+
+---
+
+## Delete User
+
+```text
+DELETE /api/users/:id
+```
+
+Deletes a user when permitted by the application's authorization rules.
 
 ---
 
@@ -323,29 +683,53 @@ The frontend uses the user API to display team member information and related us
 GET /api/activities
 ```
 
-Retrieves recent workspace activity.
+Retrieves recent activity records from MongoDB.
 
-The frontend loads activity information through the activity API service.
+Activities are generated for important workspace operations such as authentication and project operations.
 
 ---
 
 # Calendar API
 
-Calendar operations are provided through the calendar REST API.
+The calendar API stores authenticated user calendar events in MongoDB.
+
+## Get Calendar Events
 
 ```text
-/api/calendar
+GET /api/calendar
 ```
 
-The calendar API supports the calendar and reminder functionality displayed in the frontend.
+Retrieves the authenticated user's calendar events.
+
+---
+
+## Create Calendar Event
+
+```text
+POST /api/calendar
+```
+
+Creates a new calendar event.
+
+---
+
+## Delete Calendar Event
+
+```text
+DELETE /api/calendar/:id
+```
+
+Deletes a calendar event.
+
+All calendar endpoints require authentication.
 
 ---
 
 # Authentication
 
-CollabBoard uses **JWT bearer authentication** for protected API endpoints.
+CollabBoard continues to use JWT bearer authentication.
 
-The general authentication flow is:
+The Week 3 authentication flow is:
 
 ```text
 User
@@ -358,34 +742,133 @@ React Frontend
  ▼
 Express API
  │
- │ Validate credentials
+ │ Query MongoDB
+ ▼
+User Document
+ │
+ │ Verify password
  ▼
 JWT Token
  │
  ▼
 Frontend
  │
- │ Store authentication token
+ │ Store token
  ▼
-Protected API Requests
+Protected API Request
  │
- │ Authorization: Bearer <token>
+ │ Authorization: Bearer TOKEN
  ▼
 Auth Middleware
  │
  ▼
-Protected Controller
+MongoDB-backed Controller
 ```
 
-The authentication middleware verifies the JWT before allowing access to protected resources.
+JWT authentication protects application resources while MongoDB provides persistent user data.
+
+---
+
+# MongoDB Persistence
+
+Week 2 used temporary/mock server-side data.
+
+Week 3 replaces the main application data source with MongoDB.
+
+### Week 2
+
+```text
+React
+  │
+  ▼
+Express
+  │
+  ▼
+Mock/In-memory data
+```
+
+### Week 3
+
+```text
+React
+  │
+  ▼
+Express
+  │
+  ▼
+Mongoose
+  │
+  ▼
+MongoDB Atlas
+```
+
+This allows application data to remain available after restarting the backend server.
+
+---
+
+# Database Seeding
+
+The project contains:
+
+```text
+server/src/seed.js
+```
+
+The seed script creates initial CollabBoard database data.
+
+It:
+
+1. Connects to MongoDB Atlas
+2. Clears existing seeded data
+3. Creates demo users
+4. Creates projects
+5. Creates tasks
+6. Creates activities
+7. Creates calendar events
+
+The backend provides the following seed command:
+
+```bash
+npm run seed
+```
+
+The seed script is intended for development/demo database setup.
+
+---
+
+# Demo Accounts
+
+The seeded development database contains demo accounts.
+
+### Project Manager
+
+```text
+Email:
+manager@collabboard.com
+
+Password:
+password123
+```
+
+### Employee
+
+```text
+Email:
+employee@collabboard.com
+
+Password:
+password123
+```
+
+These credentials are intended for local development and demonstration only.
 
 ---
 
 # Frontend API Integration
 
-The Week 2 frontend communicates with the backend using Axios-based API services.
+The React frontend communicates with the MongoDB-backed Express API using Axios.
 
-The frontend contains separate API service modules for different application areas, including:
+The API services include:
 
 ```text
 authApi
@@ -393,205 +876,283 @@ projectApi
 taskApi
 userApi
 activityApi
+calendarApi
 ```
 
-The API client is responsible for:
+The central API client:
+
+```text
+client/src/api/apiClient.js
+```
+
+is responsible for:
 
 * Sending HTTP requests
-* Communicating with the Express server
-* Sending JSON request data
-* Attaching JWT authentication tokens
+* Setting the API base URL
+* Sending JSON data
+* Attaching JWT bearer tokens
 * Handling API responses
-* Handling authentication errors
+* Handling unauthorized requests
+* Clearing invalid authentication sessions
 
 ---
 
-# Week 2 Features
+# Offline Support
 
-## 1. Login and Authentication
+Week 3 introduces frontend caching to improve application behavior when the backend or internet connection is temporarily unavailable.
 
-The login interface from Week 1 has been integrated with the backend authentication API.
+The application uses localStorage-based caches for user-specific application data.
 
-Users can:
-
-* Enter their credentials
-* Send login requests to the backend
-* Receive an authentication token
-* Access protected application functionality
-* Retrieve their authenticated user information
-
----
-
-## 2. Dashboard
-
-The dashboard provides an overview of the workspace.
-
-It includes:
-
-* Navigation sidebar
-* Top navigation
-* Search interface
-* Dashboard statistics
-* Projects
-* Tasks
-* Kanban board
-* Team members
-* Recent activity
-
-Dashboard data can now be obtained through the backend API where implemented.
-
----
-
-## 3. Projects
-
-The Projects page provides project management functionality.
-
-The frontend communicates with:
+Examples include:
 
 ```text
-GET /api/projects
-POST /api/projects
+collabboard_projects_cache
+collabboard_tasks_cache
+collabboard_activities_cache
+collabboard_calendar_cache
 ```
 
-Projects are retrieved from the backend mock data store and new projects can be submitted through the REST API.
+The cache is scoped to the authenticated user.
 
 ---
 
-## 4. Tasks
+# Offline Data Flow
 
-The task management functionality has been integrated with the backend.
-
-The frontend communicates with:
+The frontend follows this general process:
 
 ```text
-GET /api/tasks
-POST /api/tasks
+Application Start
+       │
+       ▼
+Check Authentication
+       │
+       ▼
+Load Cached Data
+       │
+       ▼
+Display Available Data
+       │
+       ├──────── Online ────────► Fetch MongoDB API Data
+       │                                │
+       │                                ▼
+       │                         Update Application
+       │                                │
+       │                                ▼
+       │                         Update Local Cache
+       │
+       └──────── Offline ───────► Use Cached Data
 ```
 
-The Kanban interface displays tasks according to their workflow status.
+When the application reconnects, it attempts to retrieve fresh information from the API.
 
 ---
 
-## 5. Kanban Board
+# Offline Indicator
 
-The Kanban board contains:
+The frontend contains an offline status mechanism.
+
+Relevant components/hooks include:
 
 ```text
-TO DO
-   │
-   ▼
-DOING
-   │
-   ▼
-DONE
+client/src/components/layout/OfflineIndicator.jsx
+client/src/hooks/useOnlineStatus.js
 ```
 
-Tasks are displayed using reusable task cards.
+The application can detect whether the browser is currently online.
 
-The frontend uses the task API to communicate task-related operations with the backend.
+If the user is offline, previously cached application data can continue to be displayed.
 
 ---
 
-## 6. Team Members
+# User-Scoped Caching
 
-The Team Members page displays users retrieved through the user API.
+Application caches are associated with the authenticated user.
+
+For example:
 
 ```text
-GET /api/users
+collabboard_projects_cache_<userId>
+collabboard_tasks_cache_<userId>
+collabboard_activities_cache_<userId>
+collabboard_calendar_cache_<userId>
 ```
 
-This provides the frontend with user information required for the workspace interface.
+This prevents cached application data from being incorrectly shared between different user accounts on the same browser.
 
 ---
 
-## 7. Workspace Activity
+# Week 3 Features
 
-The activity page displays recent workspace activities.
+## 1. MongoDB Atlas Integration
+
+The Express backend is connected to MongoDB Atlas through Mongoose.
+
+The database connection is configured in:
 
 ```text
-GET /api/activities
+server/src/config/db.js
 ```
 
-Activity information is retrieved through the backend API rather than relying only on the original static frontend data.
+---
+
+## 2. Persistent Authentication
+
+Users are stored in MongoDB rather than only in mock arrays.
+
+Registration creates a persistent User document.
+
+Login retrieves the user from MongoDB and verifies the stored password hash.
 
 ---
 
-## 8. Calendar and Reminders
+## 3. Persistent Projects
 
-The application includes a calendar and reminder interface.
+Projects are stored in the MongoDB `projects` collection.
 
-Calendar operations are provided through the backend calendar API.
-
----
-
-## 9. Settings
-
-The Settings page provides the application's settings interface and user-related options.
+Project operations now operate on database documents rather than temporary arrays.
 
 ---
 
-# Mock Data
+## 4. Persistent Tasks
 
-Assignment 02 uses **temporary/mock server-side data**.
+Tasks are stored in the MongoDB `tasks` collection.
 
-The backend maintains application data in a server-side store instead of a permanent database.
+Tasks maintain references to their related projects and assigned users.
 
-The current mock data covers areas such as:
+---
 
-* Users
-* Projects
-* Tasks
-* Activities
+## 5. Persistent Activities
 
-This approach allows the team to demonstrate working REST API communication before introducing permanent database persistence.
+Workspace activities are stored in the MongoDB `activities` collection.
+
+This allows activity history to remain available after server restarts.
+
+---
+
+## 6. Persistent Calendar Events
+
+Calendar events are stored in the MongoDB `calendarevents` collection.
+
+Events are associated with authenticated users.
+
+---
+
+## 7. MongoDB Relationships
+
+Mongoose references connect:
+
+```text
+Users
+  │
+  ├── Projects
+  ├── Tasks
+  ├── Activities
+  └── Calendar Events
+
+Projects
+  │
+  └── Tasks
+```
+
+---
+
+## 8. Offline Data Caching
+
+The frontend stores successfully retrieved API data in localStorage.
+
+Cached data can be used when the application temporarily loses network connectivity.
+
+---
+
+## 9. Automatic Data Refresh
+
+When connectivity is restored, the application attempts to retrieve fresh data from the MongoDB-backed API.
+
+Fresh API responses replace the existing cached data.
+
+---
+
+# Mock Data Migration
+
+Week 2 used temporary server-side mock data.
+
+Week 3 changes the primary persistence mechanism to MongoDB.
+
+```text
+WEEK 2
+
+Express
+  │
+  ▼
+Mock Store
+  │
+  └── Temporary data
+
+
+WEEK 3
+
+Express
+  │
+  ▼
+Mongoose
+  │
+  ▼
+MongoDB Atlas
+  │
+  └── Persistent data
+```
+
+The project still contains some legacy/mock data files from the earlier milestone.
+
+These files should not be treated as the primary data source for the Week 3 application.
 
 ---
 
 # Postman API Testing
 
-The REST APIs are tested using **Postman**.
+The MongoDB-backed REST APIs are tested using Postman.
 
-The Postman collection contains requests for the major backend operations.
+Testing includes:
 
-Example collection structure:
+* Health check
+* User registration
+* User login
+* Current authenticated user
+* Protected routes
+* Project retrieval
+* Project creation
+* Project update
+* Project deletion
+* Task retrieval
+* Task creation
+* Task update
+* Task deletion
+* User retrieval
+* Activity retrieval
+* Calendar event creation
+* Calendar event retrieval
+* Calendar event deletion
+* Invalid authentication
+* Invalid ObjectId handling
+* Validation errors
+
+---
+
+# Database Testing
+
+MongoDB Atlas is used to verify that API operations are actually persisted.
+
+The following collections should be available:
 
 ```text
-CollabBoard API
-│
-├── Health Check
-│
-├── Authentication
-│   ├── Register
-│   ├── Login
-│   └── Current User
-│
-├── Projects
-│   ├── Get Projects
-│   └── Create Project
-│
-├── Tasks
-│   ├── Get Tasks
-│   └── Create Task
-│
-├── Users
-│   └── Get Users
-│
-├── Activities
-│   └── Get Activities
-│
-└── Calendar
-    └── Calendar Operations
+users
+projects
+tasks
+activities
+calendarevents
 ```
 
-Postman is used to verify:
-
-* HTTP methods
-* Request URLs
-* Request bodies
-* Authentication headers
-* Response status codes
-* Response JSON data
-* Protected endpoints
+After creating or updating data through the API, the corresponding MongoDB document should reflect the change.
 
 ---
 
@@ -599,19 +1160,17 @@ Postman is used to verify:
 
 ## Prerequisites
 
-Install the following software:
+Install:
 
 * Node.js
 * npm
 * Git
-
-Postman is recommended for API testing.
+* MongoDB Atlas account
+* Postman
 
 ---
 
 # Clone the Repository
-
-Clone the team's GitHub repository:
 
 ```bash
 git clone https://github.com/CollabBoard-Team-Full-Stack-Development/CollabBoard-Full-Stack-Development-Commits.git
@@ -625,9 +1184,9 @@ cd CollabBoard-Full-Stack-Development-Commits
 
 ---
 
-# Install Backend Dependencies
+# Backend Installation
 
-Open a terminal and navigate to the server directory:
+Navigate to the server:
 
 ```bash
 cd server
@@ -641,9 +1200,13 @@ npm install
 
 ---
 
-# Configure Backend Environment
+# Configure MongoDB Environment
 
-Create a `.env` file inside the `server` directory.
+Create a `.env` file inside:
+
+```text
+server/.env
+```
 
 Example:
 
@@ -651,11 +1214,24 @@ Example:
 PORT=5000
 JWT_SECRET=your_jwt_secret
 CLIENT_URL=http://localhost:5173
+MONGODB_URI=your_mongodb_atlas_connection_string
 ```
 
-Use the actual environment variables required by the final project configuration.
+Replace the MongoDB URI with the connection string from the MongoDB Atlas cluster.
 
-Do not commit private secrets to GitHub.
+Do not commit `.env` or private credentials to GitHub.
+
+---
+
+# Seed the MongoDB Database
+
+After configuring the MongoDB connection:
+
+```bash
+npm run seed
+```
+
+This creates the initial CollabBoard demo data.
 
 ---
 
@@ -667,7 +1243,7 @@ From the `server` directory:
 npm run dev
 ```
 
-The backend should run on:
+The backend runs on:
 
 ```text
 http://localhost:5000
@@ -681,11 +1257,11 @@ http://localhost:5000/api
 
 ---
 
-# Install Frontend Dependencies
+# Frontend Installation
 
 Open another terminal.
 
-Navigate to the client directory:
+Navigate to:
 
 ```bash
 cd client
@@ -707,75 +1283,79 @@ Run:
 npm run dev
 ```
 
-Vite will display the local development address.
-
 The frontend is normally available at:
 
 ```text
 http://localhost:5173
 ```
 
-Open the displayed address in a web browser.
-
 ---
 
 # Running Frontend and Backend Together
 
-The application requires both services to be running.
+Both applications must be running.
 
 ```text
 Terminal 1
 ──────────
-Backend
+
+cd server
 npm run dev
+
         │
         ▼
+
 localhost:5000
 
 
 Terminal 2
 ──────────
-Frontend
+
+cd client
 npm run dev
+
         │
         ▼
+
 localhost:5173
 ```
 
-The React frontend communicates with the Express backend through the configured API/proxy.
+The frontend communicates with the MongoDB-backed Express API.
 
 ---
 
 # Testing
 
-Week 2 testing focuses on both backend REST APIs and frontend-backend integration.
+Week 3 testing focuses on database persistence, API functionality, authentication, and offline behavior.
 
-The team checks:
+The team verifies:
 
-* Backend server starts successfully
-* API health check responds successfully
-* User registration works
-* User login works
+* MongoDB Atlas connection works
+* MongoDB database is accessible
+* Collections are created correctly
+* Seed data is inserted successfully
+* User registration creates MongoDB documents
+* Login retrieves users from MongoDB
+* Password verification works
 * JWT authentication works
 * Protected endpoints reject unauthenticated requests
-* Authenticated requests are accepted
-* Projects can be retrieved
+* Projects are stored in MongoDB
 * Projects can be created
-* Tasks can be retrieved
+* Projects can be updated
+* Projects can be deleted
+* Tasks are stored in MongoDB
 * Tasks can be created
-* Users can be retrieved
-* Activities can be retrieved
-* Calendar functionality works
-* Frontend successfully communicates with the backend
-* Dashboard loads correctly
-* Projects page loads correctly
-* Tasks page loads correctly
-* Kanban board loads correctly
-* Team Members page loads correctly
-* Calendar page loads correctly
-* Activity page loads correctly
-* Settings page loads correctly
-* Employee dashboard loads correctly
+* Tasks can be updated
+* Tasks can be deleted
+* User information is retrieved from MongoDB
+* Activities are persisted
+* Calendar events are persisted
+* MongoDB references work correctly
+* API responses contain the expected data
+* Frontend receives MongoDB-backed API data
+* Frontend cache is updated
+* Cached data remains available offline
+* Fresh data is retrieved after reconnection
 * No major console errors occur
 * No broken API requests remain
 
@@ -783,19 +1363,19 @@ The team checks:
 
 # Production Build
 
-The frontend production build can be checked using:
+The frontend production build can be tested using:
 
 ```bash
 npm run build
 ```
 
-A successful build confirms that the frontend can be compiled without major build errors.
+A successful build confirms that the React application can be compiled successfully.
 
 ---
 
 # GitHub Team Workflow
 
-The Week 2 project continues to use a branch-based Git workflow.
+The project continues to use the team's branch-based Git workflow.
 
 ```text
 main
@@ -815,152 +1395,207 @@ Each team member contributes through their assigned branch.
 
 Completed work is committed and pushed to GitHub before integration into the main branch.
 
-The repository history should contain contributions from all nine team members.
+The repository history should contain visible contributions from all nine team members.
 
 ---
 
-# Assignment 02 Git Tag
+# Assignment 03
 
-The required Git tag for Assignment 02 is:
-
-```text
-assignment-02-rest-api
-```
-
-The tag represents:
+The Week 3 milestone represents the transition from temporary mock data to persistent database-backed application data.
 
 ```text
-Assignment 02 - Working REST APIs
-(with mock data)
-Integrated with Frontend
+Assignment 02
+     │
+     ▼
+Working REST APIs
+     │
+     ▼
+Mock Server Data
+     │
+     ▼
+Assignment 03
+     │
+     ▼
+MongoDB + Mongoose
+     │
+     ▼
+Persistent Data
+     │
+     ▼
+Offline Caching
 ```
-
-The final tagged commit should contain the integrated frontend and backend implementation.
-
-Before submission, verify that:
-
-* The tag exists on GitHub
-* The tag points to the final Assignment 02 commit
-* All required frontend and backend files are included
-* Each team member has a visible contribution/commit
-* The final integrated project can be run successfully
-
----
-
-
-
-# Assignment 02 API Endpoints
-
-| Module       | Method | Endpoint             |
-| ------------ | ------ | -------------------- |
-| Health       | GET    | `/api`               |
-| Register     | POST   | `/api/auth/register` |
-| Login        | POST   | `/api/auth/login`    |
-| Current User | GET    | `/api/auth/me`       |
-| Projects     | GET    | `/api/projects`      |
-| Projects     | POST   | `/api/projects`      |
-| Tasks        | GET    | `/api/tasks`         |
-| Tasks        | POST   | `/api/tasks`         |
-| Users        | GET    | `/api/users`         |
-| Activities   | GET    | `/api/activities`    |
-| Calendar     | API    | `/api/calendar`      |
-
-The documented Assignment 02 report includes the health check, authentication, project, task, user and activity endpoints listed above.
 
 ---
 
 # Documentation and Evidence
 
-The Assignment 02 documentation includes evidence of:
+The Week 3 documentation should provide evidence of:
 
-* REST API implementation
+* MongoDB Atlas account/cluster
+* MongoDB Atlas connection
+* `CollabBoard` database
+* `users` collection
+* `projects` collection
+* `tasks` collection
+* `activities` collection
+* `calendarevents` collection
+* Mongoose models
+* Database connection configuration
+* Database seed operation
+* Persistent API operations
+* JWT authentication
 * Postman API testing
-* Authentication
-* Project API
-* Task API
-* User API
-* Activity API
-* Frontend-backend integration
+* MongoDB-backed frontend integration
+* Offline caching
+* Offline indicator
 * Login page
 * Manager dashboard
+* Employee dashboard
 * Projects page
-* All Tasks page
+* Tasks page
 * Kanban board
 * Team Members page
 * Calendar and reminders
 * Workspace activity
 * Settings page
-* Employee dashboard
+* Final database schema/UML diagram
 
 ---
 
-# Week 2 Scope
+# Final CollabBoard Database Schema
 
-This repository represents the **Week 2 Assignment 02 implementation**.
-
-The main focus of this milestone is:
+The final Week 3 database contains the following main entities:
 
 ```text
-Working REST APIs
-        +
-Mock Server Data
-        +
-React Frontend Integration
-        +
-JWT Authentication
-        +
-API Testing
+                         USER
+                          │
+            ┌─────────────┼─────────────┐
+            │             │             │
+            ▼             ▼             ▼
+        PROJECT          TASK       ACTIVITY
+            │             │
+            │             │
+            └──────► TASK │
+                          │
+                          ▼
+                         USER
+
+USER
+ │
+ ▼
+CALENDAR_EVENT
 ```
 
-The current implementation deliberately uses temporary/mock server-side data.
+The final database schema should document the relationships between:
 
-The following areas are outside the current Assignment 02 scope and are planned for later milestones:
-
-* MongoDB/Mongoose persistent database
-* Automated testing and CI
-* Full real-time synchronization
-* Other later project milestones
+```text
+USER
+PROJECT
+TASK
+ACTIVITY
+CALENDAR_EVENT
+```
 
 ---
 
-# Assignment 02 Completion Checklist
+# Week 3 Scope
 
-| Requirement                  | Status                     |
-| ---------------------------- | -------------------------- |
-| React frontend               | Completed                  |
-| Node.js backend              | Completed                  |
-| Express REST API             | Completed                  |
-| Mock server-side data        | Completed                  |
-| Authentication API           | Completed                  |
-| JWT authentication           | Completed                  |
-| Protected API routes         | Completed                  |
-| Project API                  | Completed                  |
-| Task API                     | Completed                  |
-| User API                     | Completed                  |
-| Activity API                 | Completed                  |
-| Calendar API                 | Completed                  |
-| Frontend API integration     | Completed                  |
-| Postman API testing          | Completed                  |
-| Frontend-backend integration | Completed                  |
-| GitHub repository            | Completed                  |
-| README documentation         | Completed                  |
+This repository represents the **Week 3 implementation**.
+
+The primary focus of this milestone is:
+
+```text
+MongoDB Atlas
+      +
+Mongoose
+      +
+Persistent Database Data
+      +
+REST API
+      +
+JWT Authentication
+      +
+React Integration
+      +
+Offline Caching
+```
+
+The project has moved beyond temporary mock server-side persistence and now uses MongoDB as the primary application data store.
+
+---
+
+# Future Milestones
+
+The following features are planned for later milestones:
+
+* Automated testing and CI pipelines
+* Full real-time synchronization using Socket.io
+* Docker containerization
+* Production deployment
+* Additional production-level optimizations
+
+---
+
+# Assignment 03 Completion Checklist
+
+| Requirement                   | Status    |
+| ----------------------------- | --------- |
+| React frontend                | Completed |
+| Node.js backend               | Completed |
+| Express REST API              | Completed |
+| MongoDB Atlas                 | Completed |
+| Mongoose integration          | Completed |
+| MongoDB connection            | Completed |
+| User model                    | Completed |
+| Project model                 | Completed |
+| Task model                    | Completed |
+| Activity model                | Completed |
+| Calendar Event model          | Completed |
+| Persistent user data          | Completed |
+| Persistent project data       | Completed |
+| Persistent task data          | Completed |
+| Persistent activity data      | Completed |
+| Persistent calendar data      | Completed |
+| JWT authentication            | Completed |
+| Protected API routes          | Completed |
+| MongoDB relationships         | Completed |
+| Database seeding              | Completed |
+| Frontend API integration      | Completed |
+| Offline caching               | Completed |
+| Online/offline detection      | Completed |
+| Postman API testing           | Completed |
+| MongoDB database verification | Completed |
+| GitHub repository             | Completed |
+| README documentation          | Completed |
 
 ---
 
 # Project Status
 
-**Milestone:** Assignment 02 — Working REST APIs (with mock data) Integrated with Frontend
+**Project:** CollabBoard
 
-**Status:** Week 2 Development Completed
+**Milestone:** Assignment 03 — MongoDB/Mongoose Persistence and Offline Support
 
-**Application:** CollabBoard
+**Status:** Week 3 Development Completed
 
-**Architecture:** React + Node.js + Express REST API
+**Architecture:** React + Node.js + Express + MongoDB
+
+**Database:** MongoDB Atlas
+
+**ODM:** Mongoose
 
 **Authentication:** JWT Bearer Authentication
 
-**Data Source:** Temporary/Mock Server-Side Data
+**Password Security:** bcryptjs
+
+**Data Persistence:** MongoDB
+
+**Offline Support:** localStorage-based user-scoped caching
 
 **API Testing:** Postman
 
 **Team Size:** 9 Members
+
+**Previous Milestone:** Assignment 02 — Working REST APIs with Mock Data Integrated with Frontend
+
+**Current Milestone:** Assignment 03 — MongoDB/Mongoose Persistence and Offline Support
