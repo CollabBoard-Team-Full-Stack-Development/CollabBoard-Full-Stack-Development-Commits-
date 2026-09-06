@@ -15,11 +15,12 @@ const calendarRoutes = require('./routes/calendarRoutes');
 const app = express();
 
 app.use(cors());
-app.use(express.json());
 
-/*
- * API health check
- */
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+
 app.get('/api', (req, res) => {
     res.json({
         message: 'CollabBoard API is running successfully'
