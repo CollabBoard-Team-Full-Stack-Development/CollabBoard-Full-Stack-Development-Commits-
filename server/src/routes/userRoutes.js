@@ -3,6 +3,7 @@ const express = require('express');
 const {
     getUsers,
     getUserById,
+    updateProfile,
     updateUser,
     deleteUser
 } = require('../controllers/userController');
@@ -18,6 +19,9 @@ router.use(authMiddleware);
 
 router.get('/', getUsers);
 router.get('/:id', getUserById);
+
+// Dedicated route for updating current user's database profile
+router.patch('/profile', updateProfile);
 
 router.patch(
     '/:id',

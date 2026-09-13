@@ -1,42 +1,230 @@
-# CollabBoard — Collaborative Kanban Platform
+# Project Overview
 
-## Week 2 — Working REST APIs with Mock Data Integrated with Frontend
+**CollabBoard** is a full-stack collaborative Kanban task management application designed to help teams create projects, manage tasks, assign responsibilities, monitor progress, and collaborate through a shared workspace.
 
-CollabBoard is a collaborative Kanban-style task management application developed as part of the Full Stack Application project.
+The application was developed progressively from a React-based frontend into a full-stack system using **React, Node.js, Express.js, MongoDB, Mongoose and JWT authentication**.
 
-This repository contains the **Week 2 implementation**, extending the Week 1 static React frontend with a working **Node.js + Express REST API** using temporary/mock server-side data.
+The final application provides:
 
-The Week 2 milestone focuses on connecting the frontend application with the backend API, implementing authentication, protected API routes, project and task operations, user management, activity data, calendar operations, and frontend-backend integration.
+* User registration and secure login
+* JWT-based authentication and protected API routes
+* Project creation, viewing, updating and deletion
+* Task creation, viewing, updating, moving and deletion
+* Task assignment to team members
+* Kanban board management using To Do, Doing and Done columns
+* Activity tracking
+* Calendar event management
+* Persistent MongoDB database storage
+* Client-side localStorage caching
+* Offline/online state detection
+* REST API integration between frontend and backend
+* Real-time collaboration using Socket.IO
+* Concurrent task-edit conflict detection
+* Docker-based local application setup using Docker Compose
+* Publicly accessible application deployment
 
 ---
 
-# Week 2 Objectives
+# Final Project Status
 
-The main objectives completed during Week 2 are:
+**Project:** CollabBoard
 
-* Extend the Week 1 React frontend
-* Create a Node.js backend
-* Create an Express REST API
-* Implement authentication endpoints
-* Implement JWT-based authentication
-* Implement authentication middleware
-* Create protected API routes
-* Create project REST API endpoints
-* Create task REST API endpoints
-* Create user REST API endpoints
-* Create activity REST API endpoints
-* Create calendar REST API endpoints
-* Integrate frontend API services with the backend
-* Connect the React application to the REST API
-* Replace frontend-only operations with API requests where implemented
-* Handle API authentication using JWT bearer tokens
-* Implement manager/admin authorization for project management operations
-* Use temporary/mock server-side data for Assignment 02
-* Test REST APIs using Postman
-* Test frontend-backend integration
-* Maintain the GitHub branch and commit workflow
+**Final Stage:** Full-Stack Collaborative Task Management Application
 
-The Week 2 implementation corresponds to the **Assignment 02 — Working REST APIs (with mock data) Integrated with Frontend** milestone.
+**Status:** Final Product Development Completed
+
+**Architecture:** React + Node.js + Express + MongoDB
+
+**Database:** MongoDB Atlas
+
+**ODM:** Mongoose
+
+**Authentication:** JWT Bearer Authentication
+
+**Password Security:** bcryptjs
+
+**Data Persistence:** MongoDB
+
+**Client Persistence:** localStorage-based user-scoped caching
+
+**Real-Time Communication:** Socket.IO
+
+**Concurrency Handling:** Optimistic concurrency control with conflict detection
+
+**Containerisation:** Docker + Docker Compose
+
+**API Testing:** Postman
+
+**Deployment:** Existing public Vercel deployment
+
+**Team Size:** 9 Members
+
+---
+
+# Final Product Features
+
+## Authentication
+
+Users can register and log in to the system securely.
+
+Authentication is implemented using JWT bearer tokens. Protected API routes verify the authentication token before allowing access to protected resources.
+
+Passwords are securely hashed using bcryptjs before being stored in MongoDB.
+
+---
+
+## Project Management
+
+Authenticated users can work with projects through the REST API and React frontend.
+
+Project functionality includes:
+
+* View projects
+* Create projects
+* Update projects
+* Delete projects
+* View project details
+* Manage project members
+
+---
+
+## Task Management
+
+CollabBoard provides a Kanban-style task management system.
+
+Users can:
+
+* Create tasks
+* View tasks
+* Update tasks
+* Delete tasks
+* Assign tasks
+* Change task status
+* Set priorities
+* Set due dates
+* Move tasks between Kanban columns
+
+The main Kanban workflow is:
+
+```text
+To Do → Doing → Done
+```
+
+---
+
+# MongoDB Persistence
+
+MongoDB Atlas is used as the persistent database for the application.
+
+Mongoose provides the schema and model layer between the Express backend and MongoDB.
+
+The main collections include:
+
+```text
+users
+projects
+tasks
+activities
+calendarevents
+```
+
+Application data remains available after server restarts because MongoDB is used as the primary persistent data store.
+
+---
+
+# Offline Support
+
+The frontend uses localStorage to maintain user-scoped cached application data.
+
+This provides temporary access to previously loaded information when the backend is temporarily unavailable.
+
+The application also detects online and offline browser states and provides feedback to the user.
+
+MongoDB remains the primary source of persistent application data.
+
+---
+
+# Real-Time Collaboration
+
+CollabBoard uses **Socket.IO** to support real-time communication between connected users.
+
+When a user makes a change to a task, the backend can broadcast the updated task information to other clients connected to the same project.
+
+Examples of real-time events include:
+
+```text
+task_created
+task_updated
+task_moved
+task_deleted
+```
+
+This allows connected users to see task changes without manually refreshing the page.
+
+Project-specific Socket.IO rooms can be used to ensure that users receive updates related to the project they are currently viewing.
+
+---
+
+# Concurrent Edit Detection
+
+CollabBoard uses optimistic concurrency control to reduce the risk of one user's changes silently overwriting another user's changes.
+
+Each task maintains a version value.
+
+When a user retrieves a task, the current version is also provided.
+
+When the user attempts to update the task, the client sends the version that it originally received.
+
+The backend compares the submitted version with the current database version.
+
+```text
+Submitted Version
+        │
+        ▼
+Compare with Database Version
+        │
+   ┌────┴────┐
+   │         │
+ Match     Different
+   │         │
+   ▼         ▼
+Update     Conflict
+Task       Detected
+   │         │
+   ▼         ▼
+Increment   409 Conflict
+Version
+```
+
+If another user has already modified the task, the submitted version is no longer valid.
+
+The server returns a `409 Conflict` response instead of silently overwriting the newer data.
+
+The frontend can then notify the user that the task has been changed by another user and that the latest version should be reviewed.
+
+---
+
+# Docker and Docker Compose
+
+The application supports containerised local execution using Docker.
+
+The project separates the main application services into frontend and backend containers.
+
+The Docker Compose configuration allows the services to be started together.
+
+Example:
+
+```bash
+docker compose up --build
+```
+
+To stop the containers:
+
+```bash
+docker compose down
+```
+
+This provides a consistent environment for running the application locally without requiring the frontend and backend to be configured independently.
 
 ---
 
@@ -44,554 +232,94 @@ The Week 2 implementation corresponds to the **Assignment 02 — Working REST AP
 
 ## Frontend
 
-**React 18** — Frontend framework
-**Vite** — Development and build tool
-**React Router v6** — Frontend routing
-**Tailwind CSS** — Styling
-**Lucide React** — Icons
-**Framer Motion** — Animations
-**React Context API** — Application state
-**Axios** — Frontend HTTP/API communication
-**localStorage** — Client-side token/session persistence
+* **React 18**
+* **Vite**
+* **React Router v6**
+* **Tailwind CSS**
+* **Lucide React**
+* **Framer Motion**
+* **React Context API**
+* **Axios**
+* **Socket.IO Client**
+* **localStorage**
 
 ## Backend
 
-**Node.js** — Backend runtime
-**Express.js** — REST API framework
-**JWT** — Authentication
-**CORS** — Frontend-backend communication
-**dotenv** — Environment variable configuration
+* **Node.js**
+* **Express.js**
+* **Mongoose**
+* **MongoDB Atlas**
+* **JWT**
+* **bcryptjs**
+* **Socket.IO**
+* **CORS**
+* **dotenv**
+
+## DevOps
+
+* **Docker**
+* **Docker Compose**
+* **Vercel**
 
 ## API Testing
 
-**Postman** — REST API testing and endpoint verification
-
-## Data
-
-The Assignment 02 implementation uses **temporary/mock server-side data**.
-
-MongoDB/Mongoose database persistence is outside the current Assignment 02 scope and is planned for a later milestone.
+* **Postman**
 
 ---
 
-# Week 2 Architecture
-
-The application now follows a client-server architecture.
+# System Architecture
 
 ```text
                     CollabBoard
                          │
-              ┌──────────┴──────────┐
-              │                     │
-          Frontend              Backend
-          React/Vite            Node/Express
-              │                     │
-              │ Axios               │
-              └──────────API─────────┘
-                                    │
-                              REST Endpoints
-                                    │
-                 ┌──────────────────┼──────────────────┐
-                 │                  │                  │
-             Authentication      Projects           Tasks
-                 │                  │                  │
-               Users            Activities         Calendar
-                                    │
-                              Mock Server Data
+          ┌──────────────┴──────────────┐
+          │                             │
+     React Client                  Express Server
+          │                             │
+     ┌────┴────┐                  ┌─────┴─────┐
+     │         │                  │           │
+ REST API  Socket.IO          Controllers  Middleware
+     │         │                  │           │
+     └────┬────┘                  └─────┬─────┘
+          │                             │
+          └──────────────┬──────────────┘
+                         │
+                    Mongoose ODM
+                         │
+                         ▼
+                   MongoDB Atlas
+                         │
+              ┌──────────┼──────────┐
+              │          │          │
+            Users     Projects     Tasks
+                         │
+                    Activities
+                         │
+                  Calendar Events
 ```
-
-The React frontend communicates with the Express backend through REST API endpoints.
-
-JWT bearer authentication is used to protect application endpoints.
-
----
-
-# Project Structure
-
-The Week 2 project contains both the frontend and backend applications.
-
-```text
-CollabBoard/
-│
-├── client/
-│   │
-│   ├── public/
-│   │
-│   └── src/
-│       ├── api/
-│       │   ├── api.js
-│       │   ├── authApi.js
-│       │   ├── projectApi.js
-│       │   ├── taskApi.js
-│       │   ├── userApi.js
-│       │   └── activityApi.js
-│       │
-│       ├── components/
-│       │   ├── layout/
-│       │   └── modals/
-│       │
-│       ├── context/
-│       │   ├── AppContext.jsx
-│       │   └── AuthContext.jsx
-│       │
-│       ├── pages/
-│       │   ├── Dashboard.jsx
-│       │   ├── Login.jsx
-│       │   ├── Projects.jsx
-│       │   ├── Tasks.jsx
-│       │   ├── Kanban.jsx
-│       │   ├── Team.jsx
-│       │   ├── Calendar.jsx
-│       │   ├── Activity.jsx
-│       │   └── Settings.jsx
-│       │
-│       ├── App.jsx
-│       └── main.jsx
-│
-├── server/
-│   │
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── projectController.js
-│   │   ├── taskController.js
-│   │   ├── userController.js
-│   │   ├── activityController.js
-│   │   └── calendarController.js
-│   │
-│   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── projectRoutes.js
-│   │   ├── taskRoutes.js
-│   │   ├── userRoutes.js
-│   │   ├── activityRoutes.js
-│   │   └── calendarRoutes.js
-│   │
-│   ├── middleware/
-│   │   ├── authMiddleware.js
-│   │   └── errorMiddleware.js
-│   │
-│   ├── models/
-│   │   ├── User.js
-│   │   ├── Project.js
-│   │   ├── Task.js
-│   │   └── Activity.js
-│   │
-│   ├── store.js
-│   ├── app.js
-│   ├── server.js
-│   ├── package.json
-│   └── .env
-│
-├── docs/
-│
-├── package.json
-├── README.md
-└── .gitignore
-```
-
-> The exact directory structure should be kept synchronized with the actual repository. If a file or folder is not present in the final GitHub repository, remove it from this README.
 
 ---
 
 # REST API
 
-The backend provides REST API endpoints for the main CollabBoard functionality.
+The application provides RESTful API endpoints for the main system resources.
 
-## API Base URL
-
-During local development:
+The main API areas include:
 
 ```text
-http://localhost:5000/api
-```
-
----
-
-# API Health Check
-
-### GET
-
-```text
-GET /api
-```
-
-This endpoint is used to verify that the backend server and REST API are running correctly.
-
-Example:
-
-```text
-http://localhost:5000/api
-```
-
----
-
-# Authentication API
-
-## Register
-
-```text
-POST /api/auth/register
-```
-
-Creates a new user account.
-
-## Login
-
-```text
-POST /api/auth/login
-```
-
-Authenticates a user and returns an authentication token.
-
-## Current User
-
-```text
-GET /api/auth/me
-```
-
-Returns information about the currently authenticated user.
-
-This endpoint requires a valid JWT bearer token.
-
----
-
-# Project API
-
-## Get Projects
-
-```text
-GET /api/projects
-```
-
-Retrieves available projects.
-
-## Create Project
-
-```text
-POST /api/projects
-```
-
-Creates a new project.
-
-Project management operations are protected using authentication and the appropriate manager/admin authorization.
-
----
-
-# Task API
-
-## Get Tasks
-
-```text
-GET /api/tasks
-```
-
-Retrieves tasks.
-
-## Create Task
-
-```text
-POST /api/tasks
-```
-
-Creates a new task.
-
-Task operations support the Kanban workflow and frontend task management interface.
-
-The frontend communicates task changes through the task API service.
-
----
-
-# User API
-
-## Get Users
-
-```text
-GET /api/users
-```
-
-Retrieves CollabBoard users.
-
-The frontend uses the user API to display team member information and related user data.
-
----
-
-# Activity API
-
-## Get Activities
-
-```text
-GET /api/activities
-```
-
-Retrieves recent workspace activity.
-
-The frontend loads activity information through the activity API service.
-
----
-
-# Calendar API
-
-Calendar operations are provided through the calendar REST API.
-
-```text
+/api/auth
+/api/projects
+/api/tasks
+/api/users
+/api/activities
 /api/calendar
 ```
 
-The calendar API supports the calendar and reminder functionality displayed in the frontend.
-
----
-
-# Authentication
-
-CollabBoard uses **JWT bearer authentication** for protected API endpoints.
-
-The general authentication flow is:
+The complete API contract and endpoint information are available in:
 
 ```text
-User
- │
- │ Login
- ▼
-React Frontend
- │
- │ POST /api/auth/login
- ▼
-Express API
- │
- │ Validate credentials
- ▼
-JWT Token
- │
- ▼
-Frontend
- │
- │ Store authentication token
- ▼
-Protected API Requests
- │
- │ Authorization: Bearer <token>
- ▼
-Auth Middleware
- │
- ▼
-Protected Controller
+API.md
 ```
-
-The authentication middleware verifies the JWT before allowing access to protected resources.
-
----
-
-# Frontend API Integration
-
-The Week 2 frontend communicates with the backend using Axios-based API services.
-
-The frontend contains separate API service modules for different application areas, including:
-
-```text
-authApi
-projectApi
-taskApi
-userApi
-activityApi
-```
-
-The API client is responsible for:
-
-* Sending HTTP requests
-* Communicating with the Express server
-* Sending JSON request data
-* Attaching JWT authentication tokens
-* Handling API responses
-* Handling authentication errors
-
----
-
-# Week 2 Features
-
-## 1. Login and Authentication
-
-The login interface from Week 1 has been integrated with the backend authentication API.
-
-Users can:
-
-* Enter their credentials
-* Send login requests to the backend
-* Receive an authentication token
-* Access protected application functionality
-* Retrieve their authenticated user information
-
----
-
-## 2. Dashboard
-
-The dashboard provides an overview of the workspace.
-
-It includes:
-
-* Navigation sidebar
-* Top navigation
-* Search interface
-* Dashboard statistics
-* Projects
-* Tasks
-* Kanban board
-* Team members
-* Recent activity
-
-Dashboard data can now be obtained through the backend API where implemented.
-
----
-
-## 3. Projects
-
-The Projects page provides project management functionality.
-
-The frontend communicates with:
-
-```text
-GET /api/projects
-POST /api/projects
-```
-
-Projects are retrieved from the backend mock data store and new projects can be submitted through the REST API.
-
----
-
-## 4. Tasks
-
-The task management functionality has been integrated with the backend.
-
-The frontend communicates with:
-
-```text
-GET /api/tasks
-POST /api/tasks
-```
-
-The Kanban interface displays tasks according to their workflow status.
-
----
-
-## 5. Kanban Board
-
-The Kanban board contains:
-
-```text
-TO DO
-   │
-   ▼
-DOING
-   │
-   ▼
-DONE
-```
-
-Tasks are displayed using reusable task cards.
-
-The frontend uses the task API to communicate task-related operations with the backend.
-
----
-
-## 6. Team Members
-
-The Team Members page displays users retrieved through the user API.
-
-```text
-GET /api/users
-```
-
-This provides the frontend with user information required for the workspace interface.
-
----
-
-## 7. Workspace Activity
-
-The activity page displays recent workspace activities.
-
-```text
-GET /api/activities
-```
-
-Activity information is retrieved through the backend API rather than relying only on the original static frontend data.
-
----
-
-## 8. Calendar and Reminders
-
-The application includes a calendar and reminder interface.
-
-Calendar operations are provided through the backend calendar API.
-
----
-
-## 9. Settings
-
-The Settings page provides the application's settings interface and user-related options.
-
----
-
-# Mock Data
-
-Assignment 02 uses **temporary/mock server-side data**.
-
-The backend maintains application data in a server-side store instead of a permanent database.
-
-The current mock data covers areas such as:
-
-* Users
-* Projects
-* Tasks
-* Activities
-
-This approach allows the team to demonstrate working REST API communication before introducing permanent database persistence.
-
----
-
-# Postman API Testing
-
-The REST APIs are tested using **Postman**.
-
-The Postman collection contains requests for the major backend operations.
-
-Example collection structure:
-
-```text
-CollabBoard API
-│
-├── Health Check
-│
-├── Authentication
-│   ├── Register
-│   ├── Login
-│   └── Current User
-│
-├── Projects
-│   ├── Get Projects
-│   └── Create Project
-│
-├── Tasks
-│   ├── Get Tasks
-│   └── Create Task
-│
-├── Users
-│   └── Get Users
-│
-├── Activities
-│   └── Get Activities
-│
-└── Calendar
-    └── Calendar Operations
-```
-
-Postman is used to verify:
-
-* HTTP methods
-* Request URLs
-* Request bodies
-* Authentication headers
-* Response status codes
-* Response JSON data
-* Protected endpoints
 
 ---
 
@@ -599,51 +327,58 @@ Postman is used to verify:
 
 ## Prerequisites
 
-Install the following software:
+Install:
 
 * Node.js
 * npm
 * Git
-
-Postman is recommended for API testing.
-
----
-
-# Clone the Repository
-
-Clone the team's GitHub repository:
-
-```bash
-git clone https://github.com/CollabBoard-Team-Full-Stack-Development/CollabBoard-Full-Stack-Development-Commits.git
-```
-
-Navigate into the project:
-
-```bash
-cd CollabBoard-Full-Stack-Development-Commits
-```
+* MongoDB Atlas account
+* Docker Desktop
+* Postman
 
 ---
 
-# Install Backend Dependencies
-
-Open a terminal and navigate to the server directory:
+## Backend
 
 ```bash
 cd server
+npm install
+npm start
 ```
 
-Install dependencies:
+The backend runs locally on:
 
-```bash
-npm install
+```text
+http://localhost:5000
 ```
 
 ---
 
-# Configure Backend Environment
+## Frontend
 
-Create a `.env` file inside the `server` directory.
+Open another terminal:
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+The frontend runs locally on:
+
+```text
+http://localhost:5173
+```
+
+---
+
+## Environment Variables
+
+Create:
+
+```text
+server/.env
+```
 
 Example:
 
@@ -651,316 +386,156 @@ Example:
 PORT=5000
 JWT_SECRET=your_jwt_secret
 CLIENT_URL=http://localhost:5173
+MONGODB_URI=your_mongodb_atlas_connection_string
 ```
 
-Use the actual environment variables required by the final project configuration.
-
-Do not commit private secrets to GitHub.
+The actual MongoDB connection string and JWT secret should not be committed to GitHub.
 
 ---
 
-# Start the Backend
+# Docker Setup
 
-From the `server` directory:
+The application can also be started using Docker Compose.
 
 ```bash
-npm run dev
+docker compose up --build
 ```
 
-The backend should run on:
-
-```text
-http://localhost:5000
-```
-
-The API base URL is:
-
-```text
-http://localhost:5000/api
-```
-
----
-
-# Install Frontend Dependencies
-
-Open another terminal.
-
-Navigate to the client directory:
+To stop the application:
 
 ```bash
-cd client
-```
-
-Install dependencies:
-
-```bash
-npm install
+docker compose down
 ```
 
 ---
 
-# Start the Frontend
+# Public Deployment
 
-Run:
+The existing public deployment is retained for the final project.
 
-```bash
-npm run dev
-```
+**Deployed Application:**
 
-Vite will display the local development address.
+https://collab-board-full-stack-development-sigma.vercel.app
 
-The frontend is normally available at:
+The deployment provides access to the running CollabBoard frontend.
 
-```text
-http://localhost:5173
-```
-
-Open the displayed address in a web browser.
+For production real-time functionality, the Socket.IO client must use the configured deployed backend URL rather than the local development address.
 
 ---
 
-# Running Frontend and Backend Together
+# Known Limitations
 
-The application requires both services to be running.
-
-```text
-Terminal 1
-──────────
-Backend
-npm run dev
-        │
-        ▼
-localhost:5000
-
-
-Terminal 2
-──────────
-Frontend
-npm run dev
-        │
-        ▼
-localhost:5173
-```
-
-The React frontend communicates with the Express backend through the configured API/proxy.
+* Offline support uses client-side caching and is not a complete offline-first synchronization system.
+* Concurrent editing is handled through conflict detection rather than automatic merging of conflicting changes.
+* Real-time synchronization depends on an active Socket.IO backend connection.
+* The application is intended primarily as a university full-stack project and is not designed as an enterprise-scale production system.
+* MongoDB Atlas is required for persistent database functionality.
 
 ---
 
-# Testing
+# Development Progression
 
-Week 2 testing focuses on both backend REST APIs and frontend-backend integration.
+CollabBoard was developed through multiple milestones.
 
-The team checks:
+### Assignment 01 — Static Frontend
 
-* Backend server starts successfully
-* API health check responds successfully
-* User registration works
-* User login works
-* JWT authentication works
-* Protected endpoints reject unauthenticated requests
-* Authenticated requests are accepted
-* Projects can be retrieved
-* Projects can be created
-* Tasks can be retrieved
-* Tasks can be created
-* Users can be retrieved
-* Activities can be retrieved
-* Calendar functionality works
-* Frontend successfully communicates with the backend
-* Dashboard loads correctly
-* Projects page loads correctly
-* Tasks page loads correctly
-* Kanban board loads correctly
-* Team Members page loads correctly
-* Calendar page loads correctly
-* Activity page loads correctly
-* Settings page loads correctly
-* Employee dashboard loads correctly
-* No major console errors occur
-* No broken API requests remain
+The initial application focused on:
 
----
-
-# Production Build
-
-The frontend production build can be checked using:
-
-```bash
-npm run build
-```
-
-A successful build confirms that the frontend can be compiled without major build errors.
-
----
-
-# GitHub Team Workflow
-
-The Week 2 project continues to use a branch-based Git workflow.
-
-```text
-main
-│
-├── member-01
-├── member-02
-├── member-03
-├── member-04
-├── member-05
-├── member-06
-├── member-07
-├── member-08
-└── member-09
-```
-
-Each team member contributes through their assigned branch.
-
-Completed work is committed and pushed to GitHub before integration into the main branch.
-
-The repository history should contain contributions from all nine team members.
-
----
-
-# Assignment 02 Git Tag
-
-The required Git tag for Assignment 02 is:
-
-```text
-assignment-02-rest-api
-```
-
-The tag represents:
-
-```text
-Assignment 02 - Working REST APIs
-(with mock data)
-Integrated with Frontend
-```
-
-The final tagged commit should contain the integrated frontend and backend implementation.
-
-Before submission, verify that:
-
-* The tag exists on GitHub
-* The tag points to the final Assignment 02 commit
-* All required frontend and backend files are included
-* Each team member has a visible contribution/commit
-* The final integrated project can be run successfully
-
----
-
-
-
-# Assignment 02 API Endpoints
-
-| Module       | Method | Endpoint             |
-| ------------ | ------ | -------------------- |
-| Health       | GET    | `/api`               |
-| Register     | POST   | `/api/auth/register` |
-| Login        | POST   | `/api/auth/login`    |
-| Current User | GET    | `/api/auth/me`       |
-| Projects     | GET    | `/api/projects`      |
-| Projects     | POST   | `/api/projects`      |
-| Tasks        | GET    | `/api/tasks`         |
-| Tasks        | POST   | `/api/tasks`         |
-| Users        | GET    | `/api/users`         |
-| Activities   | GET    | `/api/activities`    |
-| Calendar     | API    | `/api/calendar`      |
-
-The documented Assignment 02 report includes the health check, authentication, project, task, user and activity endpoints listed above.
-
----
-
-# Documentation and Evidence
-
-The Assignment 02 documentation includes evidence of:
-
-* REST API implementation
-* Postman API testing
-* Authentication
-* Project API
-* Task API
-* User API
-* Activity API
-* Frontend-backend integration
-* Login page
-* Manager dashboard
-* Projects page
-* All Tasks page
+* React interface
 * Kanban board
-* Team Members page
-* Calendar and reminders
-* Workspace activity
-* Settings page
-* Employee dashboard
+* Reusable components
+* Mock data
+* Routing
+* Responsive UI
+
+### Assignment 02 — REST API
+
+The second stage introduced:
+
+* Node.js
+* Express.js
+* REST API
+* JWT authentication
+* Frontend API integration
+* CRUD operations
+
+### Assignment 03 — Persistence and Offline Support
+
+The third stage introduced:
+
+* MongoDB Atlas
+* Mongoose
+* Persistent database models
+* MongoDB relationships
+* Database seeding
+* Frontend caching
+* Offline/online detection
+
+### Final Product
+
+The final stage extends the application with:
+
+* Real-time Socket.IO communication
+* Collaborative task updates
+* Concurrent edit conflict detection
+* Docker containerisation
+* Docker Compose local execution
+* Final deployment and documentation
 
 ---
 
-# Week 2 Scope
+# Project Requirements Status
 
-This repository represents the **Week 2 Assignment 02 implementation**.
+| Requirement                       | Status    |
+| --------------------------------- | --------- |
+| React frontend                    | Completed |
+| Reusable components               | Completed |
+| Express REST API                  | Completed |
+| CRUD operations                   | Completed |
+| JWT authentication                | Completed |
+| Protected routes                  | Completed |
+| MongoDB persistence               | Completed |
+| Mongoose models                   | Completed |
+| Database relationships            | Completed |
+| Frontend API integration          | Completed |
+| Offline caching                   | Completed |
+| Online/offline detection          | Completed |
+| Real-time Socket.IO communication | Completed |
+| Concurrent edit detection         | Completed |
+| Docker containerisation           | Completed |
+| Docker Compose setup              | Completed |
+| Public deployment                 | Completed |
+| API documentation                 | Completed |
+| GitHub repository                 | Completed |
 
-The main focus of this milestone is:
+---
+
+# Final Project Summary
+
+CollabBoard is a full-stack collaborative Kanban application that combines a modern React frontend with an Express REST API and MongoDB persistence.
+
+The system supports authentication, project and task management, offline client-side caching, real-time collaboration, concurrent edit detection and containerised local execution.
+
+The final architecture demonstrates the integration of:
 
 ```text
-Working REST APIs
-        +
-Mock Server Data
-        +
-React Frontend Integration
-        +
-JWT Authentication
-        +
-API Testing
+React
++
+Node.js
++
+Express
++
+MongoDB
++
+Mongoose
++
+JWT
++
+Socket.IO
++
+Docker
++
+Docker Compose
 ```
 
-The current implementation deliberately uses temporary/mock server-side data.
-
-The following areas are outside the current Assignment 02 scope and are planned for later milestones:
-
-* MongoDB/Mongoose persistent database
-* Automated testing and CI
-* Full real-time synchronization
-* Other later project milestones
-
----
-
-# Assignment 02 Completion Checklist
-
-| Requirement                  | Status                     |
-| ---------------------------- | -------------------------- |
-| React frontend               | Completed                  |
-| Node.js backend              | Completed                  |
-| Express REST API             | Completed                  |
-| Mock server-side data        | Completed                  |
-| Authentication API           | Completed                  |
-| JWT authentication           | Completed                  |
-| Protected API routes         | Completed                  |
-| Project API                  | Completed                  |
-| Task API                     | Completed                  |
-| User API                     | Completed                  |
-| Activity API                 | Completed                  |
-| Calendar API                 | Completed                  |
-| Frontend API integration     | Completed                  |
-| Postman API testing          | Completed                  |
-| Frontend-backend integration | Completed                  |
-| GitHub repository            | Completed                  |
-| README documentation         | Completed                  |
-
----
-
-# Project Status
-
-**Milestone:** Assignment 02 — Working REST APIs (with mock data) Integrated with Frontend
-
-**Status:** Week 2 Development Completed
-
-**Application:** CollabBoard
-
-**Architecture:** React + Node.js + Express REST API
-
-**Authentication:** JWT Bearer Authentication
-
-**Data Source:** Temporary/Mock Server-Side Data
-
-**API Testing:** Postman
-
-**Team Size:** 9 Members
+The project provides a complete foundation for collaborative task management while demonstrating key full-stack development concepts including frontend development, REST API design, database persistence, authentication, real-time communication, concurrency control and DevOps practices.

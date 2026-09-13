@@ -63,7 +63,8 @@ const adminMiddleware = (
     next();
 };
 
-module.exports = {
-    authMiddleware,
-    adminMiddleware
-};
+// Make it fully compatible with both direct and destructured imports
+authMiddleware.authMiddleware = authMiddleware;
+authMiddleware.adminMiddleware = adminMiddleware;
+
+module.exports = authMiddleware;
