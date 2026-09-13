@@ -4,8 +4,11 @@ import { useAuth } from './AuthContext';
 
 const SocketContext = createContext(null);
 
-// Connect to backend server socket
-const socket = io('http://localhost:5000');
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+const socket = io(SOCKET_URL, {
+  autoConnect: true,
+  reconnection: true,
+});
 
 export const SocketProvider = ({ children }) => {
   const { currentUser } = useAuth();
@@ -13,11 +16,9 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (currentUser?.id) {
-      // Emit event that this user is online
       socket.emit('user_online', currentUser.id);
     }
 
-    // Listen for broadcasts from backend regarding online users
     socket.on('update_online_users', (userIds) => {
       setOnlineUserIds(userIds);
     });

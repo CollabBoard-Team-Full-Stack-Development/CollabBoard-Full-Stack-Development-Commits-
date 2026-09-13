@@ -20,7 +20,8 @@ const io = new Server(server, {
     }
 });
 
-// Track online users
+app.set('io', io);
+
 const onlineUsers = new Map();
 
 io.on('connection', (socket) => {
@@ -34,6 +35,20 @@ io.on('connection', (socket) => {
                 'update_online_users',
                 Array.from(new Set(onlineUsers.values()))
             );
+        }
+    });
+
+    socket.on('join_project', (projectId) => {
+        if (projectId) {
+            socket.join(`project:${projectId}`);
+            console.log(`Socket ${socket.id} joined project room: project:${projectId}`);
+        }
+    });
+
+    socket.on('leave_project', (projectId) => {
+        if (projectId) {
+            socket.leave(`project:${projectId}`);
+            console.log(`Socket ${socket.id} left project room: project:${projectId}`);
         }
     });
 
@@ -56,7 +71,7 @@ const startServer = async () => {
         server.listen(PORT, () => {
             console.log(`CollabBoard API running at http://localhost:${PORT}`);
             console.log('MongoDB connected');
-            console.log('Socket.IO enabled');
+            console.log('Socket.IO enabled with room collaboration');
         });
     } catch (error) {
         console.error('Server startup aborted because MongoDB could not connect.');
@@ -65,7 +80,3 @@ const startServer = async () => {
 };
 
 startServer();
-server.listen(PORT, () => {
-    console.log(`CollabBoard API running at http://localhost:${PORT}`);
-    console.log('Socket.IO enabled');
-});

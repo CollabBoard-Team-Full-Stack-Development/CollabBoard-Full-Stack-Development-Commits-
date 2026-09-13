@@ -1,28 +1,64 @@
+const mongoose = require('mongoose');
+
 const Task = require('../models/Task');
 const Activity = require('../models/Activity');
 
-// GET /api/tasks
-const getTasks = (req, res, next) => {
+const serializeTask = (task) => {
+    const obj = task.toObject();
+    const { _id, projectId, assignees, ...rest } = obj;
+
+    return {
+        ...rest,
+        id: _id.toString(),
+        projectId: projectId?._id
+            ? projectId._id.toString()
+            : projectId?.toString(),
+        assignees: Array.isArray(assignees)
+            ? assignees.map((assignee) =>
+                assignee?._id
+                    ? assignee._id.toString()
+                    : assignee?.toString()
+            )
+            : []
+    };
+};
+
+const getTasks = async (req, res, next) => {
     try {
-        const {
-            projectId
-        } = req.query;
+        const { projectId } = req.query;
+        const filter = {};
 
-        const tasks = Task.findAll(
-            projectId || null
-        );
+        if (projectId) {
+            if (!mongoose.Types.ObjectId.isValid(projectId)) {
+                return res.status(400).json({
+                    message: 'Invalid project ID'
+                });
+            }
 
-        res.status(200).json(tasks);
+            filter.projectId = projectId;
+        }
+
+        const tasks = await Task.find(filter)
+            .populate('assignees', 'name email avatar role jobTitle')
+            .sort({ createdAt: -1 });
+
+        res.status(200).json(tasks.map(serializeTask));
     } catch (error) {
         next(error);
     }
 };
 
-// GET /api/tasks/:id
-const getTaskById = (req, res, next) => {
+const getTaskById = async (req, res, next) => {
     try {
-        const task = Task.findById(
-            req.params.id
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                message: 'Invalid task ID'
+            });
+        }
+
+        const task = await Task.findById(req.params.id).populate(
+            'assignees',
+            'name email avatar role jobTitle'
         );
 
         if (!task) {
@@ -31,14 +67,13 @@ const getTaskById = (req, res, next) => {
             });
         }
 
-        res.status(200).json(task);
+        res.status(200).json(serializeTask(task));
     } catch (error) {
         next(error);
     }
 };
 
-// POST /api/tasks
-const createTask = (req, res, next) => {
+const createTask = async (req, res, next) => {
     try {
         const {
             projectId,
@@ -52,82 +87,156 @@ const createTask = (req, res, next) => {
 
         if (!title || !projectId) {
             return res.status(400).json({
-                message:
-                    'Task title and projectId are required'
+                message: 'Task title and projectId are required'
             });
         }
 
-        const newTask = Task.create({
+        if (!mongoose.Types.ObjectId.isValid(projectId)) {
+            return res.status(400).json({
+                message: 'Invalid project ID'
+            });
+        }
+
+        const task = await Task.create({
             projectId,
             title,
-            description,
-            status,
-            priority,
+            description: description || '',
+            status: status || 'To Do',
+            priority: priority || 'Medium',
             dueDate,
-            assignees
+            assignees: Array.isArray(assignees) ? assignees : [],
+            version: 0
         });
 
-        Activity.create(
-            req.user?.name,
-            'created task',
-            title
+        await Activity.create({
+            user: req.user.id,
+            action: 'created task',
+            target: title
+        });
+
+        const populated = await Task.findById(task._id).populate(
+            'assignees',
+            'name email avatar role jobTitle'
         );
 
-        res.status(201).json(newTask);
+        const serialized = serializeTask(populated);
+
+        if (req.app.get('io')) {
+            req.app.get('io').to(`project:${projectId}`).emit('task_created', serialized);
+        }
+
+        res.status(201).json(serialized);
     } catch (error) {
         next(error);
     }
 };
 
-// PATCH /api/tasks/:id
-const updateTask = (req, res, next) => {
+const updateTask = async (req, res, next) => {
     try {
-        const task = Task.findById(
-            req.params.id
-        );
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                message: 'Invalid task ID'
+            });
+        }
 
-        if (!task) {
+        const { version, _id, id, ...updates } = req.body;
+
+        if (version !== undefined && version !== null) {
+            const existing = await Task.findById(req.params.id);
+            if (!existing) {
+                return res.status(404).json({
+                    message: 'Task not found'
+                });
+            }
+
+            if (existing.version !== Number(version)) {
+                const currentTaskSerialized = serializeTask(existing);
+                return res.status(409).json({
+                    message: 'Task was modified by another user. Please review the latest version.',
+                    code: 'TASK_CONFLICT',
+                    currentTask: currentTaskSerialized
+                });
+            }
+        }
+
+        const existingTask = await Task.findById(req.params.id);
+        if (!existingTask) {
             return res.status(404).json({
                 message: 'Task not found'
             });
         }
 
-        const oldStatus = task.status;
+        const oldStatus = existingTask.status;
 
-        const updatedTask = Task.update(
-            req.params.id,
-            req.body
-        );
+        const updateQuery = {
+            $set: updates,
+            $inc: { version: 1 }
+        };
 
-        if (
-            req.body.status &&
-            req.body.status !== oldStatus
-        ) {
-            Activity.create(
-                req.user?.name,
-                'moved task',
-                `${updatedTask.title} to ${updatedTask.status}`
-            );
+        let updatedTask;
+        if (version !== undefined && version !== null) {
+            updatedTask = await Task.findOneAndUpdate(
+                { _id: req.params.id, version: Number(version) },
+                updateQuery,
+                { new: true, runValidators: true }
+            ).populate('assignees', 'name email avatar role jobTitle');
+
+            if (!updatedTask) {
+                const latestTask = await Task.findById(req.params.id).populate('assignees', 'name email avatar role jobTitle');
+                return res.status(409).json({
+                    message: 'Task was modified by another user. Please review the latest version.',
+                    code: 'TASK_CONFLICT',
+                    currentTask: latestTask ? serializeTask(latestTask) : null
+                });
+            }
         } else {
-            Activity.create(
-                req.user?.name,
-                'updated task',
-                updatedTask.title
-            );
+            updatedTask = await Task.findByIdAndUpdate(
+                req.params.id,
+                updateQuery,
+                { new: true, runValidators: true }
+            ).populate('assignees', 'name email avatar role jobTitle');
         }
 
-        res.status(200).json(updatedTask);
+        const serialized = serializeTask(updatedTask);
+        const projectIdStr = updatedTask.projectId.toString();
+
+        if (req.body.status && req.body.status !== oldStatus) {
+            await Activity.create({
+                user: req.user.id,
+                action: 'moved task',
+                target: updatedTask.title,
+                from: oldStatus,
+                to: updatedTask.status
+            });
+            if (req.app.get('io')) {
+                req.app.get('io').to(`project:${projectIdStr}`).emit('task_moved', serialized);
+            }
+        } else {
+            await Activity.create({
+                user: req.user.id,
+                action: 'updated task',
+                target: updatedTask.title
+            });
+            if (req.app.get('io')) {
+                req.app.get('io').to(`project:${projectIdStr}`).emit('task_updated', serialized);
+            }
+        }
+
+        res.status(200).json(serialized);
     } catch (error) {
         next(error);
     }
 };
 
-// DELETE /api/tasks/:id
-const deleteTask = (req, res, next) => {
+const deleteTask = async (req, res, next) => {
     try {
-        const removed = Task.delete(
-            req.params.id
-        );
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                message: 'Invalid task ID'
+            });
+        }
+
+        const removed = await Task.findByIdAndDelete(req.params.id);
 
         if (!removed) {
             return res.status(404).json({
@@ -135,15 +244,20 @@ const deleteTask = (req, res, next) => {
             });
         }
 
-        Activity.create(
-            req.user?.name,
-            'deleted task',
-            removed.title
-        );
+        const projectIdStr = removed.projectId.toString();
+
+        await Activity.create({
+            user: req.user.id,
+            action: 'deleted task',
+            target: removed.title
+        });
+
+        if (req.app.get('io')) {
+            req.app.get('io').to(`project:${projectIdStr}`).emit('task_deleted', { id: req.params.id, projectId: projectIdStr });
+        }
 
         res.status(200).json({
-            message:
-                'Task deleted successfully',
+            message: 'Task deleted successfully',
             id: req.params.id
         });
     } catch (error) {
